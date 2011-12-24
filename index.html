@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Minecraft Enchantment Calculator</title>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="math.js"></script>
+<script type="text/javascript" src="enchantments.js"></script>
+<script type="text/javascript" src="page.js"></script>
+<script type="text/javascript" src="graph.js"></script>
+<script type="text/javascript" src="mc.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() { simulate() });
+
+function simulate()
+{
+	clear();
+
+	var hits = new Object;
+	var data = getInputData();
+	for( var i = 0; i< data.trials; i++)
+	{
+		var result = simulateEnchantment(data.itemId, data.materialId, data.level);
+		if( !hits.hasOwnProperty(result.enchantment.id) )
+			hits[result.enchantment.id] = new Object;
+			
+		if( !hits[result.enchantment.id].hasOwnProperty( result.enchantmentLevel ) )
+			hits[result.enchantment.id][result.enchantmentLevel] = 0;
+		
+		hits[result.enchantment.id][result.enchantmentLevel]++;
+	}
+	
+	var maxheight = 240;
+	var columncount = 0;
+	var columnwidth = 23;
+	write( "Base enchantment level for tool: " + getBaseEnchantmentLevel( data.itemId, data.materialId ) );
+	for( var id in hits )
+	{
+		var enchantment = _enchantments[id];
+		var totalprob = 0;
+		for( var level in hits[id] )
+		{
+			var percent = hits[id][level]/data.trials;
+			var info = enchantment.name + " " + level + " ("+parseInt(percent*100)+"%)";
+			totalprob += percent;
+			var transformedheight = maxheight * percent;
+			$("#sim")[0].innerHTML += "<a title=\""+info+"\"><div style=\"height:"+ transformedheight +"px;left:"+ (columnwidth * columncount++ + 1)+"px;background-color:"+enchantment.color+"\"></div></a>";
+			write( info );
+		}
+		write( "Total probability for " + enchantment.name + ": " + parseInt(totalprob*100) + "%" );
+	}
+}
+/*
+function go()
+{
+	clear();
+	var data = getInputData();
+	var ench = getBaseEnchantmentLevel( data.itemId,data.materialId);
+	write( "Base enchantment level for choice: " + ench);
+	if( ench <= 0 )
+	{
+		write( "Not enchantable!" );
+		return;
+	}
+	
+	var sim = makeSimulation( 10000, function(){ return simulateDistr(ench, data.level)} );
+	var aproxSim = makeSimulation( 10000, function(){return approxSimulDistr(ench,data.level,sim.min,sim.max)} );
+	var intervals = createIntervals( sim, sim.max-sim.min );
+	intervals = fillIntervals( sim, intervals );
+	makeGraph( $(".graph")[0], intervals, 150, 14 );
+	intervals = fillIntervals( aproxSim, intervals )
+	makeGraph($(".graph")[1],intervals,150,14);
+	
+	var possibleEnchs = getValidEnchantmentsForItemLevel( data.materialId, data.itemId, sim.min, sim.max, function(x){ return cdfT(sim.min,sim.max,ench/2+data.level,x)} );
+	write();
+	write( "Probability that enchantment is included in list of possible enchantments:");
+	for( var i = 0; i<possibleEnchs.length; i++)
+		write( possibleEnchs[i].enchantment.name + possibleEnchs[i].strength + " " + Math.round(possibleEnchs[i].prob*100) +"%");
+/*	
+	write();
+	write( "Wheighted probability for first enchantment" );
+	
+	var combWeight = new Object;
+	for( var i = 0; i < possibleEnchs.length; i++)
+	{
+		if( !combWeight.hasOwnProperty(possibleEnchs[i].enchantment.name) )
+		{
+			combWeight[possibleEnchs[i].enchantment.name] = {
+				totalprob: possibleEnchs[i].prob,
+				weight: possibleEnchs[i].weight,
+				name: possibleEnchs[i].enchantment.name
+			};
+		}
+		else
+		{
+			combWeight[possibleEnchs[i].enchantment.name].totalprob += possibleEnchs[i].prob;
+		}
+	}
+	
+	var ensured = new Array;
+	var varianc = new Array;
+	for( var w in combWeight )
+	{
+		if( combWeight[w].totalprob >= 0.999
+		write( w + combWeight[w].totalprob);
+	}
+	/
+}*/
+
+</script>
+<style type="text/css">
+#output, #sim
+{
+border: 1px solid black;
+margin: 3em;
+padding: 1em;
+}
+
+#sim
+{
+	position: relative;
+	height: 240px;
+	width: 85%;
+}
+
+.container
+{
+	position:relative;
+	height: 160px;
+}
+
+.graph
+{
+	padding: 1em;
+	border: 1px solid black;
+	position:absolute;
+	top: 40px;
+	left: 30px;
+	width:85%;
+	height: 150px;
+}
+
+div.base div
+{
+	background-color: rgba(0,0,0,0.65)
+}
+
+div.var div
+{
+	background-color: rgba(0,0,150,0.65)
+}
+
+.graph div, #sim div
+{
+border: 1px solid black;
+bottom:1px;
+width: 20px;
+position:absolute;
+}
+
+#output p
+{
+display:none;
+font-size:0.5em;
+color: #999;
+}
+</style>
+</head>
+<body>
+<form>
+Material: <select id="material" onChange="simulate()">
+<option value="diamond"/>Diamond</option>
+<option value="iron"/>Iron</option>
+<option value="gold"/>Gold</option>
+<option value="leather"/>Leather</option>
+<option value="stone"/>Stone</option>
+<option value="chain"/>Chainmail</option>
+<option value="wood">Wood</option>
+</select>
+
+Item: <select id="item" onChange="simulate()">
+<option value="pickaxe"/>Pickaxe</option>
+<option value="sword"/>Sword</option>
+<option value="axe"/>Axe</option>
+<option value="shovel"/>Shovel</option>
+<option value="helmet"/>Helmet</option>
+<option value="chestplate"/>Chestplate</option>
+<option value="leggings"/>Leggings</option>
+<option value="boots"/>Boots</option>
+</select>
+
+Level: <input value="30" id="level" onChange="simulate()" /> <input type="button" onClick="addLevel()" value="+"/> <input type="button" onClick="removeLevel()" value="-" />
+<br/>
+Trials: <input value="5000" id="trials" onChange="simulate()" />
+</form>
+
+<div id="sim"></div>
+<div id="output"></div>
+</body>
+</html>
