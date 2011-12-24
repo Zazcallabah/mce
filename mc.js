@@ -59,7 +59,15 @@ function simulateEnchantment( itemId, matId, level )
 	var baselevel = getBaseEnchantmentLevel( itemId, matId );
 	var moddedLevel = parseInt(simulateDistr( baselevel, level ));
 	var enchantmentlist = getEnchantmentsForModdedLevel( matId, itemId, moddedLevel );
-	return  selectWeighted( enchantmentlist);
+	var enchantment = selectWeighted( enchantmentlist);
+	var enchantmentcount = 1;
+	for(var i = moddedLevel / 2; parseInt(Math.random() * 50) <= i; i /= 2)
+	{
+		enchantmentcount++;
+	}
+	
+	enchantment["count"] = enchantmentcount;
+	return enchantment;
 }
 
 function selectWeighted( validEnchantments )

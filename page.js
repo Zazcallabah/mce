@@ -55,13 +55,14 @@ function changeLevel( l )
 	if( !isNaN( level ) )
 	{
 		var newlevel = level + l;
-		if( newlevel > 0  && newlevel <= 50)
-		{
+		if( newlevel < 0 )
+			elem.value = 0;
+		else if( newlevel >= 50 )
+			elem.value = 50;
+		else
 			elem.value = newlevel;
-			return;
-		}
 	}
-	elem.value = 0;
+	else elem.value = 0;
 }
 function getItemId( name )
 {

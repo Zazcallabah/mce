@@ -18,10 +18,19 @@ function simulate()
 	clear();
 
 	var hits = new Object;
+	var enchantmentcountstats = new Object();
+	var totalenchantmentsgiven = 0;
 	var data = getInputData();
 	for( var i = 0; i< data.trials; i++)
 	{
 		var result = simulateEnchantment(data.itemId, data.materialId, data.level);
+		totalenchantmentsgiven += result.count;
+		
+		if( !enchantmentcountstats.hasOwnProperty( result.count ) )
+			enchantmentcountstats[result.count] = 0;
+
+		enchantmentcountstats[result.count]++;
+		
 		if( !hits.hasOwnProperty(result.enchantment.id) )
 			hits[result.enchantment.id] = new Object;
 			
@@ -35,6 +44,12 @@ function simulate()
 	var columncount = 0;
 	var columnwidth = 23;
 	write( "Base enchantment level for tool: " + getBaseEnchantmentLevel( data.itemId, data.materialId ) );
+	write( "Average enchantment count: " + totalenchantmentsgiven / data.trials);
+	for( var count in enchantmentcountstats )
+	{
+		write( count + " enchantments in "+ parseInt( enchantmentcountstats[count] / data.trials *100) +"%");
+	}
+	write();
 	for( var id in hits )
 	{
 		var enchantment = _enchantments[id];
