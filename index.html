@@ -51,62 +51,6 @@ function simulate()
 		write( "Total probability for " + enchantment.name + ": " + parseInt(totalprob*100) + "%" );
 	}
 }
-/*
-function go()
-{
-	clear();
-	var data = getInputData();
-	var ench = getBaseEnchantmentLevel( data.itemId,data.materialId);
-	write( "Base enchantment level for choice: " + ench);
-	if( ench <= 0 )
-	{
-		write( "Not enchantable!" );
-		return;
-	}
-	
-	var sim = makeSimulation( 10000, function(){ return simulateDistr(ench, data.level)} );
-	var aproxSim = makeSimulation( 10000, function(){return approxSimulDistr(ench,data.level,sim.min,sim.max)} );
-	var intervals = createIntervals( sim, sim.max-sim.min );
-	intervals = fillIntervals( sim, intervals );
-	makeGraph( $(".graph")[0], intervals, 150, 14 );
-	intervals = fillIntervals( aproxSim, intervals )
-	makeGraph($(".graph")[1],intervals,150,14);
-	
-	var possibleEnchs = getValidEnchantmentsForItemLevel( data.materialId, data.itemId, sim.min, sim.max, function(x){ return cdfT(sim.min,sim.max,ench/2+data.level,x)} );
-	write();
-	write( "Probability that enchantment is included in list of possible enchantments:");
-	for( var i = 0; i<possibleEnchs.length; i++)
-		write( possibleEnchs[i].enchantment.name + possibleEnchs[i].strength + " " + Math.round(possibleEnchs[i].prob*100) +"%");
-/*	
-	write();
-	write( "Wheighted probability for first enchantment" );
-	
-	var combWeight = new Object;
-	for( var i = 0; i < possibleEnchs.length; i++)
-	{
-		if( !combWeight.hasOwnProperty(possibleEnchs[i].enchantment.name) )
-		{
-			combWeight[possibleEnchs[i].enchantment.name] = {
-				totalprob: possibleEnchs[i].prob,
-				weight: possibleEnchs[i].weight,
-				name: possibleEnchs[i].enchantment.name
-			};
-		}
-		else
-		{
-			combWeight[possibleEnchs[i].enchantment.name].totalprob += possibleEnchs[i].prob;
-		}
-	}
-	
-	var ensured = new Array;
-	var varianc = new Array;
-	for( var w in combWeight )
-	{
-		if( combWeight[w].totalprob >= 0.999
-		write( w + combWeight[w].totalprob);
-	}
-	/
-}*/
 
 </script>
 <style type="text/css">
