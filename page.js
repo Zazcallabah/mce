@@ -6,16 +6,20 @@ function write( str )
 }
 function writev( str )
 {
-	$("#output")[0].innerHTML += "<p>" + str + "</p>\n";
+	$("#output")[0].innerHTML += "<p class=\"debug\">" + str + "</p>\n";
 }
 
 function clear()
 {
-	$("#output")[0].innerText ="";
-	$("#sim")[0].innerText="";
-	var graphs = $(".graph");
-	for(var i = 0; i<graphs.length; i++)
-		graphs[i].innerText="";
+	clearAll(".chartholder");
+	clearAll(".textholder");
+}
+
+function clearAll( identifier )
+{
+	var elems = $(identifier);
+	for(var i = 0; i<elems.length; i++)
+		elems[i].innerText="";
 }
 
 function addLevel()

@@ -21,6 +21,14 @@ function simulate()
 	var enchantmentcountstats = new Object();
 	var totalenchantmentsgiven = 0;
 	var data = getInputData();
+	var base = getBaseEnchantmentLevel( data.itemId, data.materialId );
+	write( "Base enchantment level for tool: " + base );
+	if( base <= 0 )
+	{
+		write( "Not enchantable!" );
+		return;
+	}
+	write( "Simulating enchanting " + data.material + " " + data.item + " " + data.trials + " times..." );
 	for( var i = 0; i< data.trials; i++)
 	{
 		var result = simulateEnchantment(data.itemId, data.materialId, data.level);
@@ -39,17 +47,22 @@ function simulate()
 		
 		hits[result.enchantment.id][result.enchantmentLevel]++;
 	}
+	write( "Done, presenting data..." );
 	
 	var maxheight = 240;
 	var columncount = 0;
 	var columnwidth = 23;
-	write( "Base enchantment level for tool: " + getBaseEnchantmentLevel( data.itemId, data.materialId ) );
 	write( "Average enchantment count: " + totalenchantmentsgiven / data.trials);
 	for( var count in enchantmentcountstats )
 	{
-		write( count + " enchantments in "+ parseInt( enchantmentcountstats[count] / data.trials *100) +"%");
+		var percent = enchantmentcountstats[count] / data.trials;
+		var info = count + " enchantments in "+ parseInt( percent *100) +"% of simulated cases";
+		var transf = maxheight * percent;
+		$("#num")[0].innerHTML += makeChartBar( info, transf, columnwidth*columncount++ + 1, "white" );
+		write( info);
 	}
 	write();
+	columncount=0;
 	for( var id in hits )
 	{
 		var enchantment = _enchantments[id];
@@ -60,57 +73,46 @@ function simulate()
 			var info = enchantment.name + " " + level + " ("+parseInt(percent*100)+"%)";
 			totalprob += percent;
 			var transformedheight = maxheight * percent;
-			$("#sim")[0].innerHTML += "<a title=\""+info+"\"><div style=\"height:"+ transformedheight +"px;left:"+ (columnwidth * columncount++ + 1)+"px;background-color:"+enchantment.color+"\"></div></a>";
+			$("#sim")[0].innerHTML += makeChartBar( info, transformedheight, columnwidth*columncount++ + 1,enchantment.color );
 			write( info );
 		}
 		write( "Total probability for " + enchantment.name + ": " + parseInt(totalprob*100) + "%" );
 	}
 }
 
+function makeChartBar( detailmessage, pixelheight, distanceleft, color)
+{
+	return "<a title=\""+detailmessage+"\"><div style=\"height:"+ pixelheight +"px;left:"+ distanceleft+"px;background-color:"+color+"\"></div></a>";
+}
+
 </script>
 <style type="text/css">
-#output, #sim
+.textholder, .chartholder
 {
 border: 1px solid black;
 margin: 3em;
 padding: 1em;
 }
-
-#sim
+.chartcontainer
+{
+float:left;
+width: 40%;
+margin: 2em;
+padding: 2em;
+}
+.textholder
+{
+	float: right;
+	width: 30%;
+}
+.chartholder
 {
 	position: relative;
 	height: 240px;
-	width: 85%;
+	width: 100%;
 }
 
-.container
-{
-	position:relative;
-	height: 160px;
-}
-
-.graph
-{
-	padding: 1em;
-	border: 1px solid black;
-	position:absolute;
-	top: 40px;
-	left: 30px;
-	width:85%;
-	height: 150px;
-}
-
-div.base div
-{
-	background-color: rgba(0,0,0,0.65)
-}
-
-div.var div
-{
-	background-color: rgba(0,0,150,0.65)
-}
-
-.graph div, #sim div
+.chartholder div
 {
 border: 1px solid black;
 bottom:1px;
@@ -118,7 +120,7 @@ width: 20px;
 position:absolute;
 }
 
-#output p
+.debug
 {
 display:none;
 font-size:0.5em;
@@ -137,7 +139,7 @@ Material: <select id="material" onChange="simulate()">
 <option value="chain"/>Chainmail</option>
 <option value="wood">Wood</option>
 </select>
-
+|
 Item: <select id="item" onChange="simulate()">
 <option value="pickaxe"/>Pickaxe</option>
 <option value="sword"/>Sword</option>
@@ -148,13 +150,17 @@ Item: <select id="item" onChange="simulate()">
 <option value="leggings"/>Leggings</option>
 <option value="boots"/>Boots</option>
 </select>
-
-Level: <input value="30" id="level" onChange="simulate()" /> <input type="button" onClick="addLevel()" value="+"/> <input type="button" onClick="removeLevel()" value="-" />
-<br/>
-Trials: <input value="5000" id="trials" onChange="simulate()" />
+|
+Level: <input value="30" id="level" onChange="simulate()" /> <input type="button" onClick="addLevel()" value="+"/> <input type="button" onClick="removeLevel()" value="-" /> | 
+Simulations: <input value="5000" id="trials" onChange="simulate()" /> <input type="button" onClick="simulate()" value="Go"/>
 </form>
+<div class="chartcontainer">
+Enchantment distribution:
+<div class="chartholder" id="sim"></div>
 
-<div id="sim"></div>
-<div id="output"></div>
+Number of enchantments distribution:
+<div class="chartholder" id="num"></div>
+</div>
+<div class="textholder" id="output"></div>
 </body>
 </html>
