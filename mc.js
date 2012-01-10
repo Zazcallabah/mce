@@ -31,37 +31,46 @@ function foreachValidEnchantment( materialId, itemId, callback )
 /**/
 function getEnchantmentsForModdedLevel( matId, itemId, level )
 {
-	var arr = new Object;
+	var arr = new Array;
 	foreachValidEnchantment( matId, itemId, function( ench, enchlevel ) 
 	{
 		if( ench.minEnchant(enchlevel) <= level && ench.maxEnchant(enchlevel) >= level )
-			arr[ench.name] = { enchantment: ench, enchantmentLevel: enchlevel };
+			arr[arr.length] = { enchantment: ench, enchantmentLevel: enchlevel };
 	});
-	
-	var ret = new Array;
-	var count = 0;
-	for( var key in arr )
+	return arr;
+}
+
+function stripeIncompatibleEnchantments( enchantment, list )
+{
+	var arr = new Array;
+	for( var i =0;i<list.length;i++)
 	{
-		ret[count++] = arr[key];
+		if( list[i].enchantment.applies( enchantment.name ) )
+			arr[arr.length] = list[i];
 	}
-	return ret;
+	return arr;
 }
 
 /**/
-function simulateEnchantment( itemId, matId, level )
+function simulateEnchantments( itemId, matId, level )
 {
+	var applied_enchantments = new Array;
+
 	var baselevel = getBaseEnchantmentLevel( itemId, matId );
 	var moddedLevel = parseInt(simulateDistr( baselevel, level ));
 	var enchantmentlist = getEnchantmentsForModdedLevel( matId, itemId, moddedLevel );
+	
 	var enchantment = selectWeighted( enchantmentlist);
-	var enchantmentcount = 1;
+	applied_enchantments[applied_enchantments.length] = enchantment;
+
 	for(var i = moddedLevel / 2; parseInt(Math.random() * 50) <= i; i /= 2)
 	{
-		enchantmentcount++;
+		enchantmentlist = stripeIncompatibleEnchantments( enchantment, enchantmentlist );
+		enchantment = selectWeighted( enchantmentlist );
+		applied_enchantments[applied_enchantments.length] = enchantment;
 	}
 	
-	enchantment["count"] = enchantmentcount;
-	return enchantment;
+	return applied_enchantments;
 }
 
 /**/
@@ -70,6 +79,10 @@ function selectWeighted( validEnchantments )
 	var totalweight = 0;
 	for( var i = 0; i<validEnchantments.length; i++)
 	{
+		if( validEnchantments[i].enchantment == undefined )
+		{
+			write (validEnchantments[i]);
+		}
 		totalweight += validEnchantments[i].enchantment.weight;
 	}
 	var eeniemeenie = parseInt( Math.random() * totalweight );
