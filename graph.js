@@ -1,18 +1,5 @@
 
-function approxSimulDistr( base, level, min, max )
-{
-	var mean  = base/2+level;
-	return randomTriangular( min, max, mean );
-}
-function X( base )
-{
-	return parseInt(Math.random() * (base/2));
-}
 
-function N()
-{
-	return Math.random();
-}
 
 function countInterval( arr, min, max )
 {

@@ -19,7 +19,7 @@ function clearAll( identifier )
 {
 	var elems = $(identifier);
 	for(var i = 0; i<elems.length; i++)
-		elems[i].innerText="";
+		elems[i].innerHTML="";
 }
 
 function addLevel()

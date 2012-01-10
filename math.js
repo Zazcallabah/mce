@@ -1,3 +1,32 @@
+
+function approxSimulDistr( base, level, min, max )
+{
+	var mean  = base/2+level;
+	return randomTriangular( min, max, mean );
+}
+
+function getValidEnchantmentsForItemLevel( materialId, itemId, minlevel, maxlevel, cdf )
+{
+	var list = new Array();
+	var listcount = 0;
+	foreachValidEnchantment( materialId, itemId, function( ench, level ) {
+		var enchMin = ench.minEnchant(level);
+		var enchMax = ench.maxEnchant(level);
+
+		if( enchMin < maxlevel && enchMax > minlevel )
+		{
+			var from = Math.max( enchMin, minlevel );
+			var upperbound = ( level == ench.maxlevel ) ? enchMax : Math.min( enchMax, ench.minEnchant(level+1) );
+			var to = Math.min( upperbound, maxlevel );
+			var prob = cdf(to) - cdf(from);
+			if( prob > 0.001 )
+				list[listcount++] = { enchantment: ench, strength: level, prob: prob};
+		}
+	} );
+
+	return list;
+}
+
 function cdfT( min, max, peak, x )
 {
 	if( x < min ) return 0;

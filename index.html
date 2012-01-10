@@ -4,16 +4,107 @@
 <title>Minecraft Enchantment Calculator</title>
 
 <script type="text/javascript" src="jquery.js"></script>
-<script type="text/javascript" src="math.js"></script>
 <script type="text/javascript" src="enchantments.js"></script>
 <script type="text/javascript" src="page.js"></script>
-<script type="text/javascript" src="graph.js"></script>
 <script type="text/javascript" src="mc.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function() { simulate() });
 
+var isDebugMode = false;
+function toggleDebug()
+{
+	isDebugMode = !isDebugMode;
+	var d = $(".debug");
+	isDebugMode ? d.show() : d.hide();
+}
+
+var multimode = false;
+function toggleMulti()
+{
+	multimode = !multimode;
+	simulate();
+}
+
+
 function simulate()
+{
+	if( !multimode )
+		simulateOld();
+	else
+		simulateNew();
+}
+
+
+function simulateNew()
+{
+	clear();
+
+	var hits = new Object;
+	var enchantmentcountstats = new Object();
+	var totalenchantmentsgiven = 0;
+	var data = getInputData();
+	var base = getBaseEnchantmentLevel( data.itemId, data.materialId );
+	write( "Base enchantment level for tool: " + base );
+	if( base <= 0 )
+	{
+		write( "Not enchantable!" );
+		return;
+	}
+	write( "Simulating enchanting " + data.material + " " + data.item + " " + data.trials + " times..." );
+	for( var i = 0; i< data.trials; i++)
+	{
+		var result = simulateEnchantment(data.itemId, data.materialId, data.level);
+		totalenchantmentsgiven += result.count;
+		
+		if( !enchantmentcountstats.hasOwnProperty( result.count ) )
+			enchantmentcountstats[result.count] = 0;
+
+		enchantmentcountstats[result.count]++;
+		
+		if( !hits.hasOwnProperty(result.enchantment.id) )
+			hits[result.enchantment.id] = new Object;
+			
+		if( !hits[result.enchantment.id].hasOwnProperty( result.enchantmentLevel ) )
+			hits[result.enchantment.id][result.enchantmentLevel] = 0;
+		
+		hits[result.enchantment.id][result.enchantmentLevel]++;
+	}
+	write( "Done, presenting data..." );
+	
+	var maxheight = 240;
+	var columncount = 0;
+	var columnwidth = 23;
+	write( "Average enchantment count: " + totalenchantmentsgiven / data.trials);
+	for( var count in enchantmentcountstats )
+	{
+		var percent = enchantmentcountstats[count] / data.trials;
+		var info = count + " enchantments in "+ parseInt( percent *100) +"% of simulated cases";
+		var transf = maxheight * percent;
+		$("#num")[0].innerHTML += makeChartBar( info, transf, columnwidth*columncount++ + 1, "white" );
+		write( info);
+	}
+	write();
+	columncount=0;
+	for( var id in hits )
+	{
+		var enchantment = _enchantments[id];
+		var totalprob = 0;
+		for( var level in hits[id] )
+		{
+			var percent = hits[id][level]/data.trials;
+			var info = enchantment.name + " " + level + " ("+parseInt(percent*100)+"%)";
+			totalprob += percent;
+			var transformedheight = maxheight * percent;
+			$("#sim")[0].innerHTML += makeChartBar( info, transformedheight, columnwidth*columncount++ + 1,enchantment.color );
+			write( info );
+		}
+		write( "Total probability for " + enchantment.name + ": " + parseInt(totalprob*100) + "%" );
+	}
+}
+
+
+function simulateOld()
 {
 	clear();
 
@@ -152,7 +243,7 @@ Item: <select id="item" onChange="simulate()">
 </select>
 |
 Level: <input value="30" id="level" onChange="simulate()" /> <input type="button" onClick="addLevel()" value="+"/> <input type="button" onClick="removeLevel()" value="-" /> | 
-Simulations: <input value="5000" id="trials" onChange="simulate()" /> <input type="button" onClick="simulate()" value="Go"/>
+Simulations: <input value="5000" id="trials" onChange="simulate()" /> | Debug: <input type="checkbox" onClick="toggleDebug()"/> <span class="debug">| Multi: <input type="checkbox" onClick="toggleMulti()"/></span> | <input type="button" onClick="simulate()" value="Go"/>
 </form>
 <div class="chartcontainer">
 Enchantment distribution:

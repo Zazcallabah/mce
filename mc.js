@@ -1,31 +1,23 @@
 
+/**/
 function simulateDistr( base, level )
 {
 	return (1 + X(base) + X(base)+level) * (1 + ((N() + N() - 1) *0.25))+.5;
 }
 
-function getValidEnchantmentsForItemLevel( materialId, itemId, minlevel, maxlevel, cdf )
+/**/
+function X( base )
 {
-	var list = new Array();
-	var listcount = 0;
-	foreachValidEnchantment( materialId, itemId, function( ench, level ) {
-		var enchMin = ench.minEnchant(level);
-		var enchMax = ench.maxEnchant(level);
-
-		if( enchMin < maxlevel && enchMax > minlevel )
-		{
-			var from = Math.max( enchMin, minlevel );
-			var upperbound = ( level == ench.maxlevel ) ? enchMax : Math.min( enchMax, ench.minEnchant(level+1) );
-			var to = Math.min( upperbound, maxlevel );
-			var prob = cdf(to) - cdf(from);
-			if( prob > 0.001 )
-				list[listcount++] = { enchantment: ench, strength: level, prob: prob};
-		}
-	} );
-
-	return list;
+	return parseInt(Math.random() * (base/2));
 }
 
+/**/
+function N()
+{
+	return Math.random();
+}
+
+/**/
 function foreachValidEnchantment( materialId, itemId, callback )
 {
 	for( var i =0;i<_enchantments.length;i++)
@@ -36,6 +28,7 @@ function foreachValidEnchantment( materialId, itemId, callback )
 	}
 }
 
+/**/
 function getEnchantmentsForModdedLevel( matId, itemId, level )
 {
 	var arr = new Object;
@@ -54,6 +47,7 @@ function getEnchantmentsForModdedLevel( matId, itemId, level )
 	return ret;
 }
 
+/**/
 function simulateEnchantment( itemId, matId, level )
 {
 	var baselevel = getBaseEnchantmentLevel( itemId, matId );
@@ -70,6 +64,7 @@ function simulateEnchantment( itemId, matId, level )
 	return enchantment;
 }
 
+/**/
 function selectWeighted( validEnchantments )
 {
 	var totalweight = 0;
@@ -89,6 +84,7 @@ function selectWeighted( validEnchantments )
 	return validEnchantments[validEnchantments.length-1];
 }
 
+/**/
 function getBaseEnchantmentLevel( itemId, materialId )
 {
 	var isArmor = itemId >= 4 ? 0 : 1;
