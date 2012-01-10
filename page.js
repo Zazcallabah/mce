@@ -39,7 +39,20 @@ function getInputData()
 	var material = $("#material")[0].value;
 	var item = $("#item")[0].value;
 	var level = parseInt($("#level")[0].value);
-	var trials = parseInt($("#trials")[0].value);
+	if( level < 0 || level > 50 )
+		level = $("#level")[0].value = 30;
+	var trials = $("#trials")[0].value.split("/");
+	var iters = 1000;
+	var sims = 10;
+	if( trials.length != 2 )
+	{
+		$("#trials")[0].value = defaultSimulationValue;
+	}
+	else
+	{
+		iters = parseInt(trials[0]);
+		sims = parseInt(trials[1]);
+	}
 	var matId = getMaterialId( material );
 	var itemId = getItemId( item );
 	return {
@@ -48,7 +61,8 @@ function getInputData()
 		level: level,
 		materialId: matId,
 		itemId: itemId,
-		trials: trials
+		iterations: iters,
+		simulations: sims
 	};
 }
 

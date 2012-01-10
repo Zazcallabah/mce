@@ -9,8 +9,14 @@
 <script type="text/javascript" src="mc.js"></script>
 
 <script type="text/javascript">
-$(document).ready(function() { simulate() });
+var defaultSimulationValue = "500/10";
+$(document).ready(function()
+{
+	$("#trials")[0].value = defaultSimulationValue;
+	simulate();
+});
 
+/*
 var isDebugMode = false;
 function toggleDebug()
 {
@@ -18,6 +24,7 @@ function toggleDebug()
 	var d = $(".debug");
 	isDebugMode ? d.show() : d.hide();
 }
+*/
 
 function simulate()
 {
@@ -36,38 +43,44 @@ function simulate()
 		write( "Not enchantable!" );
 		return;
 	}
-	write( "Simulating enchanting " + data.material + " " + data.item + " " + data.trials + " times..." );
-	for( var i = 0; i< data.trials; i++)
+	write( "Simulating enchanting " + data.material + " " + data.item + " " + data.iterations + " times over " + data.simulations +" series." );
+	for( var sim = 0; sim < data.simulations; sim++)
 	{
-		var results = simulateEnchantments(data.itemId, data.materialId, data.level);
-		totalenchantmentsgiven += results.length;
-		
-		ensureVar( enchantmentcountstats, results.length, 0 );
-		enchantmentcountstats[results.length]++;
-		
-		ensureStatsVars( firsthit, results[0] );
-		firsthit[results[0].enchantment.id][results[0].enchantmentLevel]++;
-		
-		for( var ii = 0; ii<results.length; ii++ )
+		for( var iter = 0; iter<data.iterations; iter++)
 		{
-			var result = results[ii];
-			ensureStatsVars( hits, result );
-			hits[result.enchantment.id][result.enchantmentLevel]++;
+			var results = simulateEnchantments(data.itemId, data.materialId, data.level);
+			totalenchantmentsgiven += results.length;
+
+			ensureVar( enchantmentcountstats, results.length, { sum:0, sqsum:0, x:0, n:0 } );
+			enchantmentcountstats[results.length].x++;
+
+			ensureStatsVars( firsthit, results[0] );
+			firsthit[results[0].enchantment.id][results[0].enchantmentLevel].x++;
+
+			for( var i = 0; i<results.length; i++ )
+			{
+				var result = results[i];
+				ensureStatsVars( hits, result );
+				hits[result.enchantment.id][result.enchantmentLevel].x++;
+			}
 		}
+
+		updateSum(enchantmentcountstats);
+		for( var id in firsthit )
+			updateSum( firsthit[id] );
+		for( var id in hits )
+			updateSum( hits[id] );
 	}
 	write( "Done, presenting data..." );
 	
 	var maxheight = 240;
 	var columncount = 0;
 	var columnwidth = 23;
-	write( "Enchantment count saturation: " + totalenchantmentsgiven / data.trials);
+	write( "Enchantment count saturation: " + totalenchantmentsgiven / (data.simulations*data.iterations) );
 	for( var count in enchantmentcountstats )
 	{
-		var percent = enchantmentcountstats[count] / data.trials;
-		var info = count + " enchantments in "+ parseInt( percent *100) +"% of simulated cases";
-		var transf = maxheight * percent;
-		$("#num")[0].innerHTML += makeChartBar( info, transf, columnwidth*columncount++ + 1, "white" );
-		write( info);
+		writeChartBarWithStdev( enchantmentcountstats[count], data.iterations, "#num", maxheight, columnwidth*columncount++ + 1, "white", function(p,s){
+		return count + " enchantments in "+ parseInt( p *100) +"+-"+parseInt(s*1000)/10+"% of simulated cases";});
 	}
 	write();
 	columncount=0;
@@ -77,12 +90,9 @@ function simulate()
 		var totalprob = 0;
 		for( var level in hits[id] )
 		{
-			var percent = hits[id][level]/data.trials;
-			var info = enchantment.name + " " + level + " ("+parseInt(percent*100)+"%)";
-			totalprob += percent;
-			var transformedheight = maxheight * percent;
-			$("#sim")[0].innerHTML += makeChartBar( info, transformedheight, columnwidth*columncount++ + 1,enchantment.color );
-			write( info );
+			writeChartBarWithStdev( hits[id][level], data.iterations, "#sim", maxheight, columnwidth*columncount++ +1, enchantment.color, function(p,s){
+				totalprob += p;
+				return enchantment.name + " " + level + " ("+parseInt(p*100)+"+-"+parseInt(s*1000)/10+"%)"; });
 		}
 		write( "Total probability for " + enchantment.name + ": " + parseInt(totalprob*100) + "%" );
 	}
@@ -94,11 +104,8 @@ function simulate()
 		var totalprob = 0;
 		for( var level in firsthit[id] )
 		{
-			var percent = firsthit[id][level]/data.trials;
-			var info = enchantment.name + " " + level + " ("+parseInt(percent*100)+"%)";
-			totalprob += percent;
-			var transformedheight = maxheight * percent;
-			$("#first")[0].innerHTML += makeChartBar( info, transformedheight, columnwidth*columncount++ + 1,enchantment.color );
+			writeChartBarWithStdev( firsthit[id][level], data.iterations, "#first", maxheight, columnwidth*columncount++ +1, enchantment.color, function(p,s){
+				return enchantment.name + " " + level + " ("+parseInt(p*100)+"+-"+parseInt(s*1000)/10+"%)"; });
 		}
 	}
 }
@@ -112,13 +119,41 @@ function ensureVar( target, variable, value )
 function ensureStatsVars( vars, result )
 {
 	ensureVar( vars, result.enchantment.id, new Object );
-	ensureVar( vars[result.enchantment.id], result.enchantmentLevel, 0 );
+	ensureVar( vars[result.enchantment.id], result.enchantmentLevel, {sum:0,sqsum:0,x:0,n:0} );
 }
 
-
-function makeChartBar( detailmessage, pixelheight, distanceleft, color)
+function updateSum( arr )
 {
-	return "<a title=\""+detailmessage+"\"><div style=\"height:"+ pixelheight +"px;left:"+ distanceleft+"px;background-color:"+color+"\"></div></a>";
+	for( var id in arr )
+	{
+		arr[id].sum += arr[id].x;
+		arr[id].sqsum += arr[id].x * arr[id].x;
+		arr[id].n++;
+		arr[id].mean = arr[id].sum / arr[id].n;
+		arr[id].variance = ( arr[id].sqsum - (arr[id].sum * arr[id].sum / arr[id].n)) / ( arr[id].n - 1 );
+		arr[id].x = 0;
+	}
+}
+
+function writeChartBarWithStdev( dataset, iterations, divid, maxHeight, yOffset, color, makeInfo)
+{
+	var percent = dataset.mean / iterations;
+	var stdev = Math.sqrt( dataset.variance ) / iterations;
+
+	var info = makeInfo( percent, stdev );
+	var upper = maxHeight * (percent + stdev );
+	var mean = maxHeight * percent;
+	var lower = maxHeight * (percent - stdev );
+	$(divid)[0].innerHTML += makeChartBar( info, upper, yOffset, color, 0.2 );
+	$(divid)[0].innerHTML += makeChartBar( info, mean, yOffset, color, 0.7 );
+	$(divid)[0].innerHTML += makeChartBar( info, lower, yOffset, color, 1 );
+	write( info);
+
+}
+
+function makeChartBar( detailmessage, pixelheight, distanceleft, color, opacity)
+{
+	return "<a title=\""+detailmessage+"\"><div style=\"height:"+ pixelheight +"px;left:"+ distanceleft+"px;opacity:"+opacity+";background-color:"+color+"\"></div></a>";
 }
 
 </script>
@@ -188,17 +223,17 @@ Item: <select id="item" onChange="simulate()">
 </select>
 |
 Level: <input value="30" id="level" onChange="simulate()" /> <input type="button" onClick="addLevel()" value="+"/> <input type="button" onClick="removeLevel()" value="-" /> | 
-Simulations: <input value="5000" id="trials" onChange="simulate()" /> | Debug: <input type="checkbox" onClick="toggleDebug()"/> | <input type="button" onClick="simulate()" value="Go"/>
+Simulations: <input id="trials" onChange="simulate()" /> <!--| Debug: <input type="checkbox" onClick="toggleDebug()"/--> | <input type="button" onClick="simulate()" value="Go"/>
 </form>
 <div class="chartcontainer">
 
-Total enchantment distribution:
+Probability that enchantment will be included:
 <div class="chartholder" id="sim"></div>
 
 First enchantment distribution:
 <div class="chartholder" id="first"></div>
 
-Number of enchantments distribution:
+Probability to get N enchantments:
 <div class="chartholder" id="num"></div>
 
 </div>
