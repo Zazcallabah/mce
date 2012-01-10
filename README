@@ -24,16 +24,12 @@ lower line in each bar, based on the simulation. The middle line in each bar is 
 forms a normal distribution around this value, but I'm not sure.
 
 Charts:
-Total enchantment distribution. - This is the most relevant result of the simulation. Each enchantment seen is
+Enchantment distribution. - This is the most relevant result of the simulation. Each enchantment seen is
 represented by a bar, with the height being set to the percentage of times that enchantment was seen. Note that since
 some simulations generate several enchantments at once, the sum of the percentages often become more than 100. (How
 much more is given as "enchantment count saturation" in the info box.)
 
-First enchantment distribution - This is the old versions chart. It only accounts for the first enchantment given in
-each simulation. This will make the percentages for the different charts add up to 100 percent, but it should really be
-disregarded. It will probably be removed in a future version.
-
-Number of enchantments distribution - A simple chart that shows the probability of receiving multiple enchantments.
+Number of enchantments - A simple chart that shows the probability of receiving multiple enchantments.
 
 
 Info box:
