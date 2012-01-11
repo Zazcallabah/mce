@@ -116,7 +116,7 @@ function writeChartBarWithStdev( dataset, iterations, divid, maxHeight, yOffset,
 	var upper = maxHeight * (percent + stdev );
 	var mean = maxHeight * percent;
 	var lower = maxHeight * (percent - stdev );
-	$(divid)[0].innerHTML += makeChartBar( info, upper, yOffset, color, 0.2 );
+	$(divid)[0].innerHTML += makeChartBar( info, upper, yOffset, color, 0.5 );
 	$(divid)[0].innerHTML += makeChartBar( info, mean, yOffset, color, 0.7 );
 	$(divid)[0].innerHTML += makeChartBar( info, lower, yOffset, color, 1 );
 	write( info);
