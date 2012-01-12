@@ -163,7 +163,7 @@ var _enchantments = [
 	maxEnchant: function( i ){ return this.minEnchant(i) + 50;},
 	minEnchant: function( i ){  return 1+(i-1)*15;},
 	canEnchant: function(mId,iId) { return iId === 0 || iId === 2 || iId === 3; },
-	applies: function( other ) { return !( other === "fortune" || other === "silktouch" ) },
+	applies: function( other ) { return !( other === "efficiency" ) },
 	id: 14,
 	color: "orchid" },
 {

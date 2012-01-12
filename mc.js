@@ -29,23 +29,29 @@ function foreachValidEnchantment( materialId, itemId, callback )
 }
 
 /**/
-function getEnchantmentsForModdedLevel( matId, itemId, level )
+function getEnchantments( matId, itemId, level )
 {
-	var arr = new Array;
+	var map = {};
 	foreachValidEnchantment( matId, itemId, function( ench, enchlevel ) 
 	{
 		if( ench.minEnchant(enchlevel) <= level && ench.maxEnchant(enchlevel) >= level )
-			arr[arr.length] = { enchantment: ench, enchantmentLevel: enchlevel };
+			map[ench.name] = { enchantment: ench, enchantmentLevel: enchlevel };
 	});
-	return arr;
+
+	var list = [];
+	for( var name in map )
+	{
+		list[list.length] = map[name];
+	}
+	return list;
 }
 
 function stripeIncompatibleEnchantments( enchantment, list )
 {
-	var arr = new Array;
+	var arr = [];
 	for( var i =0;i<list.length;i++)
 	{
-		if( list[i].enchantment.applies( enchantment.name ) )
+		if( list[i].enchantment.applies( enchantment.enchantment.name ) )
 			arr[arr.length] = list[i];
 	}
 	return arr;
@@ -54,20 +60,23 @@ function stripeIncompatibleEnchantments( enchantment, list )
 /**/
 function simulateEnchantments( itemId, matId, level )
 {
-	var applied_enchantments = new Array;
+	var applied_enchantments = [];
 
 	var baselevel = getBaseEnchantmentLevel( itemId, matId );
 	var moddedLevel = parseInt(simulateDistr( baselevel, level ));
-	var enchantmentlist = getEnchantmentsForModdedLevel( matId, itemId, moddedLevel );
+	var enchantmentlist = getEnchantments( matId, itemId, moddedLevel );
 	
 	var enchantment = selectWeighted( enchantmentlist);
 	applied_enchantments[applied_enchantments.length] = enchantment;
 
-	for(var i = moddedLevel / 2; parseInt(Math.random() * 50) <= i; i /= 2)
+	for(var i = moddedLevel / 2; parseInt(Math.random() * 50) <= i && enchantmentlist.length > 0; i /= 2)
 	{
 		enchantmentlist = stripeIncompatibleEnchantments( enchantment, enchantmentlist );
-		enchantment = selectWeighted( enchantmentlist );
-		applied_enchantments[applied_enchantments.length] = enchantment;
+		if( enchantmentlist.length > 0 )
+		{
+			enchantment = selectWeighted( enchantmentlist );
+			applied_enchantments[applied_enchantments.length] = enchantment;
+		}
 	}
 	
 	return applied_enchantments;

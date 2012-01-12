@@ -21,8 +21,8 @@ function simulate()
 {
 	clear();
 
-	var statsSimulateEnchantment = new Object;
-	var statsEnchantmentCount = new Object();
+	var statsSimulateEnchantment = {};
+	var statsEnchantmentCount = {};
 	
 	var totalEnchantments = 0;
 	var data = getInputData();
@@ -39,6 +39,7 @@ function simulate()
 		for( var iter = 0; iter<data.iterations; iter++)
 		{
 			var results = simulateEnchantments(data.itemId, data.materialId, data.level);
+
 			totalEnchantments += results.length;
 
 			ensureVar( statsEnchantmentCount, results.length, { sum:0, sqsum:0, x:0, n:0 } );
@@ -91,7 +92,7 @@ function ensureVar( target, variable, value )
 
 function ensureStatsVars( vars, result )
 {
-	ensureVar( vars, result.enchantment.id, new Object );
+	ensureVar( vars, result.enchantment.id, {} );
 	ensureVar( vars[result.enchantment.id], result.enchantmentLevel, {sum:0,sqsum:0,x:0,n:0} );
 }
 
