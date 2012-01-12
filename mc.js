@@ -86,7 +86,7 @@ function selectWeighted( validEnchantments )
 		totalweight += validEnchantments[i].enchantment.weight;
 	}
 	var eeniemeenie = parseInt( Math.random() * totalweight );
-	for( var i = 0; i<validEnchantments.length; i++)
+	for( i = 0; i<validEnchantments.length; i++)
 	{
 		eeniemeenie -= validEnchantments[i].enchantment.weight;
 		if( eeniemeenie < 0 )

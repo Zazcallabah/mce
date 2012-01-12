@@ -3,16 +3,17 @@
 <head>
 <title>Minecraft Enchantment Simulator</title>
 
-<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="storage.js"></script>
 <script type="text/javascript" src="enchantments.js"></script>
 <script type="text/javascript" src="page.js"></script>
 <script type="text/javascript" src="mc.js"></script>
 
 <script type="text/javascript">
-var defaultSimulationValue = "200/25";
+
 $(document).ready(function()
 {
-	$("#trials")[0].value = defaultSimulationValue;
+	setInitialValues();
 	simulate();
 });
 
@@ -64,7 +65,7 @@ function simulate()
 	for( var count in statsEnchantmentCount )
 	{
 		writeChartBarWithStdev( statsEnchantmentCount[count], data.iterations, "#num", maxHeight, columnWidth*columnCount++ + 1, "white", function(p,s){
-		return count + " enchantments in "+ parseInt( p *100) +"+-"+parseInt(s*1000)/10+"% of simulated cases";});
+		return count + " enchantments in "+ parseInt( p *100) +"+-"+parseInt(s*1000)/10+"% of simulated cases";}, data.showstdev);
 	}
 	write();
 	columnCount=0;
@@ -76,7 +77,7 @@ function simulate()
 		{
 			writeChartBarWithStdev( statsSimulateEnchantment[id][level], data.iterations, "#sim", maxHeight, columnWidth*columnCount++ +1, enchantment.color, function(p,s){
 				probabilitySum += p;
-				return enchantment.name + " " + level + " ("+parseInt(p*100)+"+-"+parseInt(s*1000)/10+"%)"; });
+				return enchantment.name + " " + level + " ("+parseInt(p*100)+"+-"+parseInt(s*1000)/10+"%)"; }, data.showstdev);
 		}
 		write( "Total probability for " + enchantment.name + ": " + parseInt(probabilitySum*100) + "%" );
 	}
@@ -107,7 +108,7 @@ function updateSum( arr )
 	}
 }
 
-function writeChartBarWithStdev( dataset, iterations, divid, maxHeight, yOffset, color, makeInfo)
+function writeChartBarWithStdev( dataset, iterations, divid, maxHeight, yOffset, color, makeInfo, showstdev )
 {
 	var percent = dataset.mean / iterations;
 	var stdev = Math.sqrt( dataset.variance ) / iterations;
@@ -116,9 +117,16 @@ function writeChartBarWithStdev( dataset, iterations, divid, maxHeight, yOffset,
 	var upper = maxHeight * (percent + stdev );
 	var mean = maxHeight * percent;
 	var lower = maxHeight * (percent - stdev );
-	$(divid)[0].innerHTML += makeChartBar( info, upper, yOffset, color, 0.5 );
-	$(divid)[0].innerHTML += makeChartBar( info, mean, yOffset, color, 0.7 );
-	$(divid)[0].innerHTML += makeChartBar( info, lower, yOffset, color, 1 );
+	if(showstdev)
+	{
+		$(divid)[0].innerHTML += makeChartBar( info, upper, yOffset, color, 0.5 );
+		$(divid)[0].innerHTML += makeChartBar( info, mean, yOffset, color, 0.7 );
+		$(divid)[0].innerHTML += makeChartBar( info, lower, yOffset, color, 1 );
+	}
+	else
+	{
+		$(divid)[0].innerHTML += makeChartBar( info, mean, yOffset, color, 1 );
+	}
 	write( info);
 
 }
@@ -173,7 +181,7 @@ color: #999;
 </head>
 <body>
 <form>
-Material: <select id="material" onChange="simulate()">
+Material: <select id="material" onchange="simulate()">
 <option value="diamond">Diamond</option>
 <option value="iron">Iron</option>
 <option value="gold">Gold</option>
@@ -183,7 +191,7 @@ Material: <select id="material" onChange="simulate()">
 <option value="wood">Wood</option>
 </select>
 |
-Item: <select id="item" onChange="simulate()">
+Item: <select id="item" onchange="simulate()">
 <option value="pickaxe">Pickaxe</option>
 <option value="sword">Sword</option>
 <option value="axe">Axe</option>
@@ -194,8 +202,8 @@ Item: <select id="item" onChange="simulate()">
 <option value="boots">Boots</option>
 </select>
 |
-Level: <input value="30" id="level" onChange="simulate()" /> <input type="button" onClick="addLevel()" value="+"/> <input type="button" onClick="removeLevel()" value="-" /> | 
-Simulations: <input id="trials" onChange="simulate()" /> | <input type="button" onClick="simulate()" value="Go"/>
+Level: <input value="30" id="level" onchange="simulate()" /> <input type="button" onclick="addLevel()" value="+"/> <input type="button" onclick="removeLevel()" value="-" /> |
+Simulations: <input id="trials" onchange="simulate()" /> | Show confidence intervals: <input type="checkbox" id="stdev" onchange="simulate()"/> | <input type="button" onclick="simulate()" value="Go"/>
 </form>
 <div class="chartcontainer">
 

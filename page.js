@@ -34,53 +34,67 @@ function removeLevel()
 	simulate();
 }
 
+function validateFields()
+{
+	var defaultvalues = getDefaultValues();
+
+	var level = parseInt($("#level")[0].value,10);
+	if( level < 0 )
+		$("#level")[0].value = 0;
+	if( level > 50 )
+		$("#level")[0].value = 50;
+	if( isNaN( level ) )
+		$("#level")[0].value = defaultvalues.level;
+
+	var trials = $("#trials")[0].value.split("/");
+	if( trials.length != 2 || !validInt(parseInt(trials[0])) || !validInt(parseInt(trials[1])) )
+			$("#trials")[0].value = defaultvalues.iterations + "/" + defaultvalues.simulations;
+}
+
+function validInt( i )
+{
+	return i < 0 ? false : !isNaN(i);
+}
+
+function setInitialValues()
+{
+	var data = getDataFromStorage();
+	setForSelect( "#material", data.material );
+	setForSelect( "#item", data.item );
+	$("#level")[0].value = data.level;
+	$("#trials")[0].value = data.iterations + "/" + data.simulations;
+	$("#stdev")[0].checked = data.showstdev;
+}
+
+function setForSelect( id, value )
+{
+	for (var i=0;i< $(id)[0].options.length;i++)
+		if ($(id)[0].options[i].value === value)
+			$(id)[0].options[i].selected = true;
+}
+
 function getInputData()
 {
-	var material = $("#material")[0].value;
-	var item = $("#item")[0].value;
-	var level = parseInt($("#level")[0].value);
-	if( level < 0 || level > 50 )
-		level = $("#level")[0].value = 30;
+	validateFields();
+	var data = getDefaultValues();
+	data.material = $("#material")[0].value;
+	data.item = $("#item")[0].value;
+	data.level = parseInt($("#level")[0].value);
 	var trials = $("#trials")[0].value.split("/");
-	var iters = 1000;
-	var sims = 10;
-	if( trials.length != 2 )
-	{
-		$("#trials")[0].value = defaultSimulationValue;
-	}
-	else
-	{
-		iters = parseInt(trials[0]);
-		sims = parseInt(trials[1]);
-	}
-	var matId = getMaterialId( material );
-	var itemId = getItemId( item );
-	return {
-		material: material,
-		item: item,
-		level: level,
-		materialId: matId,
-		itemId: itemId,
-		iterations: iters,
-		simulations: sims
-	};
+	data.iterations = parseInt( trials[0] );
+	data.simulations = parseInt( trials[1] );
+	data.materialId = getMaterialId( data.material );
+	data.itemId = getItemId( data.item );
+	data.showstdev = $("#stdev")[0].checked;
+	saveDataToStorage( data );
+	return data;
 }
 
 function changeLevel( l )
 {
 	var elem = $("#level")[0];
 	var level = parseInt(elem.value);
-	if( !isNaN( level ) )
-	{
-		var newlevel = level + l;
-		if( newlevel < 0 )
-			elem.value = 0;
-		else if( newlevel >= 50 )
-			elem.value = 50;
-		else
-			elem.value = newlevel;
-	}
-	else elem.value = 0;
+	elem.value = level + l;
 }
 function getItemId( name )
 {
