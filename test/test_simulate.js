@@ -8,6 +8,15 @@ describe('enchantmentlist',function(){
 	});
 });
 
+describe( 'id-function', function(){
+	it('supports bow',function(){
+		expect(getItemId("bow")).toBe(8);
+	});
+	it('defaults to -1', function(){
+		expect(getItemId("")).toBe(-1);
+	});
+});
+
 describe('enchantmentlist', function(){
 	it('when striped based on efficienty', function(){
 		var e1 = {
@@ -36,6 +45,13 @@ describe('enchantmentlist', function(){
 				expect( enchantmentList[i].enchantment.name ).not.toBe( enchantmentList[j].enchantment.name );
 			}
 		}
+	});
+});
+
+describe('simulation', function(){
+	it('can be run deterministically',function(){
+
+		expect( _enchantments.length ).toBe( 21 );
 	});
 });
 

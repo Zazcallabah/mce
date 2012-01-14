@@ -1399,6 +1399,14 @@ jasmine.Matchers.prototype.toBeGreaterThan = function(expected) {
   return this.actual > expected;
 };
 
+jasmine.Matchers.prototype.toBeLessThanOrEqualTo = function(expected) {
+	return this.actual <= expected;
+};
+
+jasmine.Matchers.prototype.toBeGreaterThanOrEqualTo = function(expected) {
+	return this.actual >= expected;
+};
+
 /**
  * Matcher that checks that the expected item is equal to the actual item
  * up to a given level of decimal precision (default 2).

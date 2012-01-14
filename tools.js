@@ -1,7 +1,18 @@
-/**
- * Created by JetBrains WebStorm.
- * User: peter.hamberg
- * Date: 1/14/12
- * Time: 1:01 PM
- * To change this template use File | Settings | File Templates.
- */
+function foreach( list, callback )
+{
+	for( var item in list )
+	{
+		if( list.hasOwnProperty( item ) )
+			callback( list[item] );
+	}
+}
+
+function where( list, callback )
+{
+	var items = [];
+	foreach( list, function(item){
+		if( callback( item ) )
+			items[items.length] = item;
+});
+	return items;
+}
