@@ -108,6 +108,7 @@ function getItemId( name )
 	case 'chestplate': return 5;
 	case 'leggings': return 6;
 	case 'boots': return 7;
+	case 'bow': return 8;
 	default: return -1;
 	}
 }

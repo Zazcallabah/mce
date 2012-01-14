@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Minecraft Enchantment Simulator</title>
+<title>Minecraft Enchantment Simulator v1.5</title>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="storage.js"></script>
@@ -25,6 +25,7 @@ function simulate()
 	var statsEnchantmentCount = {};
 	
 	var totalEnchantments = 0;
+	var misses = 0;
 	var data = getInputData();
 	var baseLevel = getBaseEnchantmentLevel( data.itemId, data.materialId );
 	write( "Base enchantment level for tool: " + baseLevel );
@@ -41,6 +42,8 @@ function simulate()
 			var results = simulateEnchantments(data.itemId, data.materialId, data.level);
 
 			totalEnchantments += results.length;
+			if( results.length === 0 )
+				misses++;
 
 			ensureVar( statsEnchantmentCount, results.length, { sum:0, sqsum:0, x:0, n:0 } );
 			statsEnchantmentCount[results.length].x++;
@@ -52,12 +55,13 @@ function simulate()
 				statsSimulateEnchantment[result.enchantment.id][result.enchantmentLevel].x++;
 			}
 		}
-
 		updateSum(statsEnchantmentCount);
 		for( var id in statsSimulateEnchantment )
 			updateSum( statsSimulateEnchantment[id] );
 	}
 	write( "Done, presenting data..." );
+	if(misses > 0 )
+	write ("Missed enchanting " + misses + " times.");
 	
 	var maxHeight = 240;
 	var columnCount = 0;
@@ -201,6 +205,7 @@ Item: <select id="item" onchange="simulate()">
 <option value="chestplate">Chestplate</option>
 <option value="leggings">Leggings</option>
 <option value="boots">Boots</option>
+<option value="bow">Bow</option>
 </select>
 |
 Level: <input value="30" id="level" onchange="simulate()" /> <input type="button" onclick="addLevel()" value="+"/> <input type="button" onclick="removeLevel()" value="-" /> |
