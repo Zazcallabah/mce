@@ -71,29 +71,35 @@ function stripeIncompatibleEnchantments( enchantment, list )
 	return arr;
 }
 
-/**/
+/* Algorithm source: Minecraft source extracted using Minecraft Coder Pack, source file: EnchantmentHelper.java */
 function simulateEnchantments( itemId, matId, level )
+{
+	return simulateEnchantmentsInternal(itemId,matId,level,simulateDistr,getEnchantments,selectWeighted,stripeIncompatibleEnchantments);
+}
+
+/* Callbacks used for testing. */
+function simulateEnchantmentsInternal( itemId, matId, level, getModdedLevelCallback,getEnchantmentsCallback,selectWeightedCallback,stripeIncompatibleEnchantmentsCallback)
 {
 	var applied_enchantments = [];
 
 	var baselevel = getBaseEnchantmentLevel( itemId, matId );
-	var moddedLevel = parseInt(simulateDistr( baselevel, level ),10);
-	var enchantmentlist = getEnchantments( matId, itemId, moddedLevel );
+	var moddedLevel = getModdedLevelCallback( baselevel, level );
+	var enchantmentlist = getEnchantmentsCallback( matId, itemId, moddedLevel );
 	if( enchantmentlist.length === 0 )
 		return applied_enchantments;
 
-	var enchantment = selectWeighted( enchantmentlist);
+	var enchantment = selectWeightedCallback( enchantmentlist);
 	applied_enchantments[applied_enchantments.length] = enchantment;
 
 	if( enchantment === undefined )
 		write( "ERR" );
 
-	for(var i = moddedLevel / 2; parseInt(Math.random() * 50) <= i && enchantmentlist.length > 0; i /= 2)
+	for(var i = moddedLevel / 2; Math.floor(Math.random() * 50) <= i && enchantmentlist.length > 0; i /= 2)
 	{
-		enchantmentlist = stripeIncompatibleEnchantments( enchantment, enchantmentlist );
+		enchantmentlist = stripeIncompatibleEnchantmentsCallback( enchantment, enchantmentlist );
 		if( enchantmentlist.length > 0 )
 		{
-			enchantment = selectWeighted( enchantmentlist );
+			enchantment = selectWeightedCallback( enchantmentlist );
 			if( enchantment === undefined )
 				write( "ERR" );
 			applied_enchantments[applied_enchantments.length] = enchantment;
@@ -138,9 +144,9 @@ function getBaseEnchantmentLevel( itemId, materialId )
 		type = 2; //bow
 
 	var levels =[
-		[10, 9,25,15,-1,12,-1],
-		[10,14,22,-1, 5,-1,15],
-		[ 1, 1, 1, 1, 1, 1, 1]];
+		[10, 9,25,15,-1,12,-1], // armor
+		[10,14,22,-1, 5,-1,15], // non-armor
+		[ 1, 1, 1, 1, 1, 1, 1]];// bow
 
 	return levels[type][materialId];
 }

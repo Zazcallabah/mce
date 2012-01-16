@@ -1,31 +1,6 @@
-function saveDataToStorage( data )
-{
-	var jsonData = JSON.stringify( data );
+var makeStorage = function() { return {
 
-	if (typeof(localStorage) !== undefined )
-	{
-		localStorage.setItem("data", jsonData)
-	}
-}
-
-function getDataFromStorage()
-{
-	if (typeof(localStorage) !== undefined )
-	{
-		var storedData = localStorage.getItem( "data" );
-		if( storedData === null || storedData === undefined )
-		{
-			storedData = getDefaultValues();
-			saveDataToStorage(storedData);
-			return storedData;
-		}
-		else return JSON.parse( storedData );
-	}
-	else
-		return getDefaultValues();
-}
-
-function getDefaultValues()
+getDefault: function()
 {
 	return {
 		material: "diamond",
@@ -37,4 +12,33 @@ function getDefaultValues()
 		simulations: 25,
 		showstdev: true
 	};
+},
+
+saveData: function( data )
+{
+	var jsonData = JSON.stringify( data );
+	if( typeof(localStorage) !== undefined )
+	{
+		localStorage.setItem( "data", jsonData )
+	}
+},
+
+getData: function()
+{
+	if( typeof(localStorage) !== undefined )
+	{
+		var storedData = localStorage.getItem( "data" );
+		if( storedData === null || storedData === undefined )
+		{
+			storedData = this.getDefault();
+			this.saveData( storedData );
+			return storedData;
+		}
+		else
+			return JSON.parse( storedData );
+	}
+	else
+		return this.getDefault();
 }
+
+}; };

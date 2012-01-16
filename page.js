@@ -1,42 +1,54 @@
-function write( str )
+var makePage = function( storage, tools ) { return {
+
+/*
+ * Writes data to the info box.
+ */
+write: function( str )
 {
 	if(str === undefined )
 		str = " ";
 	$("#output")[0].innerHTML += "<pre>"+str + "\n</pre>";
-}
-function writev( str )
+},
+
+writev: function( str )
 {
 	$("#output")[0].innerHTML += "<p class=\"debug\">" + str + "</p>\n";
-}
+},
 
-function clear()
+/*
+ * Clears the info box and all charts of all components.
+ */
+clear: function()
 {
-	clearAll(".chartholder");
-	clearAll(".textholder");
-}
+	this.clearAll(".chartholder");
+	this.clearAll(".textholder");
+},
 
-function clearAll( identifier )
+clearAll: function( identifier )
 {
 	var elems = $(identifier);
 	for(var i = 0; i<elems.length; i++)
 		elems[i].innerHTML="";
-}
+},
 
-function addLevel()
+addLevel: function()
 {
-	changeLevel(1);
+	this.changeLevel(1);
 	simulate();
-}
+},
 
-function removeLevel()
+removeLevel: function()
 {
-	changeLevel(-1);
+	this.changeLevel(-1);
 	simulate();
-}
+},
 
-function validateFields()
+/*
+ * Ensures all input fields contain correct data.
+ */
+validateFields: function()
 {
-	var defaultvalues = getDefaultValues();
+	var defaultvalues = storage.getDefault();
 
 	var level = parseInt($("#level")[0].value,10);
 	if( level < 0 )
@@ -47,56 +59,87 @@ function validateFields()
 		$("#level")[0].value = defaultvalues.level;
 
 	var trials = $("#trials")[0].value.split("/");
-	if( trials.length != 2 || !validInt(parseInt(trials[0])) || !validInt(parseInt(trials[1])) )
+	if( trials.length != 2 || !tools.validInt(parseInt(trials[0])) || !tools.validInt(parseInt(trials[1])) )
 			$("#trials")[0].value = defaultvalues.iterations + "/" + defaultvalues.simulations;
-}
+},
 
-function validInt( i )
+writeChartBarWithStdev: function( dataset, iterations, divid, maxHeight, yOffset, color, makeInfo, showstdev )
 {
-	return i < 0 ? false : !isNaN(i);
-}
+	var percent = dataset.mean / iterations;
+	var stdev = Math.sqrt( dataset.variance ) / iterations;
 
-function setInitialValues()
+	var info = makeInfo( percent, stdev );
+	var upper = maxHeight * (percent + stdev );
+	var mean = maxHeight * percent;
+	var lower = maxHeight * (percent - stdev );
+	if(showstdev)
+	{
+		$(divid)[0].innerHTML += this.makeChartBar( info, upper, yOffset, color, 0.5 );
+		$(divid)[0].innerHTML += this.makeChartBar( info, mean, yOffset, color, 0.7 );
+		$(divid)[0].innerHTML += this.makeChartBar( info, lower, yOffset, color, 1 );
+	}
+	else
+	{
+		$(divid)[0].innerHTML += this.makeChartBar( info, mean, yOffset, color, 1 );
+	}
+	this.write( info);
+},
+
+makeChartBar: function( detailmessage, pixelheight, distanceleft, color, opacity)
 {
-	var data = getDataFromStorage();
-	setForSelect( "#material", data.material );
-	setForSelect( "#item", data.item );
+	return "<a title=\""+detailmessage+"\"><div style=\"height:"+ pixelheight +"px;left:"+ distanceleft+"px;opacity:"+opacity+";background-color:"+color+"\"></div></a>";
+},
+
+
+/*
+ * Seed the input components with the data stored in localStorage.
+ */
+setInitialValues: function()
+{
+	var data = storage.getData();
+	this.setForSelect( "#material", data.material );
+	this.setForSelect( "#item", data.item );
 	$("#level")[0].value = data.level;
 	$("#trials")[0].value = data.iterations + "/" + data.simulations;
 	$("#stdev")[0].checked = data.showstdev;
-}
+},
 
-function setForSelect( id, value )
+setForSelect: function( id, value )
 {
 	for (var i=0;i< $(id)[0].options.length;i++)
 		if ($(id)[0].options[i].value === value)
 			$(id)[0].options[i].selected = true;
-}
+},
 
-function getInputData()
+/*
+ * Returns a data object containing all input.
+ * Data is validated before retrieval.
+ */
+getInputData: function()
 {
-	validateFields();
-	var data = getDefaultValues();
+	this.validateFields();
+	var data = storage.getDefault();
 	data.material = $("#material")[0].value;
 	data.item = $("#item")[0].value;
-	data.level = parseInt($("#level")[0].value);
+	data.level = parseInt($("#level")[0].value, 10);
 	var trials = $("#trials")[0].value.split("/");
-	data.iterations = parseInt( trials[0] );
-	data.simulations = parseInt( trials[1] );
-	data.materialId = getMaterialId( data.material );
-	data.itemId = getItemId( data.item );
+	data.iterations = parseInt( trials[0], 10 );
+	data.simulations = parseInt( trials[1], 10 );
+	data.materialId = this.getMaterialId( data.material );
+	data.itemId = this.getItemId( data.item );
 	data.showstdev = $("#stdev")[0].checked;
-	saveDataToStorage( data );
+	storage.saveData( data );
 	return data;
-}
+},
 
-function changeLevel( l )
+changeLevel: function( l )
 {
 	var elem = $("#level")[0];
-	var level = parseInt(elem.value);
+	var level = parseInt(elem.value,10);
 	elem.value = level + l;
-}
-function getItemId( name )
+},
+
+getItemId: function( name )
 {
 	switch(name)
 	{
@@ -111,9 +154,9 @@ function getItemId( name )
 	case 'bow': return 8;
 	default: return -1;
 	}
-}
+},
 
-function getMaterialId( name )
+getMaterialId: function( name )
 {
 	switch(name)
 	{
@@ -128,3 +171,4 @@ function getMaterialId( name )
 	}
 }
 
+}; };

@@ -10,16 +10,19 @@
 <script type="text/javascript" src="mc.js"></script>
 
 <script type="text/javascript">
+var _storage = makeStorage();
+var _tools = makeTools();
+var _page = makePage( _storage, _tools );
 
 $(document).ready(function()
 {
-	setInitialValues();
+	_page.setInitialValues();
 	simulate();
 });
 
 function simulate()
 {
-	clear();
+	_page.clear();
 
 	var statsSimulateEnchantment = {};
 	var statsEnchantmentCount = {};
@@ -86,59 +89,6 @@ function simulate()
 		}
 		write( "Total probability for " + enchantment.name + ": " + parseInt(probabilitySum*100) + "%" );
 	}
-}
-
-function ensureVar( target, variable, value )
-{
-	if( !target.hasOwnProperty( variable ) )
-		target[variable] = value;
-}
-
-function ensureStatsVars( vars, result )
-{
-	ensureVar( vars, result.enchantment.id, {} );
-	ensureVar( vars[result.enchantment.id], result.enchantmentLevel, {sum:0,sqsum:0,x:0,n:0} );
-}
-
-function updateSum( arr )
-{
-	for( var id in arr )
-	{
-		arr[id].sum += arr[id].x;
-		arr[id].sqsum += arr[id].x * arr[id].x;
-		arr[id].n++;
-		arr[id].mean = arr[id].sum / arr[id].n;
-		arr[id].variance = ( arr[id].sqsum - (arr[id].sum * arr[id].sum / arr[id].n)) / ( arr[id].n - 1 );
-		arr[id].x = 0;
-	}
-}
-
-function writeChartBarWithStdev( dataset, iterations, divid, maxHeight, yOffset, color, makeInfo, showstdev )
-{
-	var percent = dataset.mean / iterations;
-	var stdev = Math.sqrt( dataset.variance ) / iterations;
-
-	var info = makeInfo( percent, stdev );
-	var upper = maxHeight * (percent + stdev );
-	var mean = maxHeight * percent;
-	var lower = maxHeight * (percent - stdev );
-	if(showstdev)
-	{
-		$(divid)[0].innerHTML += makeChartBar( info, upper, yOffset, color, 0.5 );
-		$(divid)[0].innerHTML += makeChartBar( info, mean, yOffset, color, 0.7 );
-		$(divid)[0].innerHTML += makeChartBar( info, lower, yOffset, color, 1 );
-	}
-	else
-	{
-		$(divid)[0].innerHTML += makeChartBar( info, mean, yOffset, color, 1 );
-	}
-	write( info);
-
-}
-
-function makeChartBar( detailmessage, pixelheight, distanceleft, color, opacity)
-{
-	return "<a title=\""+detailmessage+"\"><div style=\"height:"+ pixelheight +"px;left:"+ distanceleft+"px;opacity:"+opacity+";background-color:"+color+"\"></div></a>";
 }
 
 </script>
