@@ -1,4 +1,7 @@
 
+/*
+ * The extracted data for each enchantment type. Source: Minecraft source, deobfuscated using the Minecraft Coder Pack
+ */
 var _enchantments = [
 
 {
@@ -11,7 +14,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId === 0 || iId === 2 || iId === 3; },
 	applies: function( other ) { return !( other === "fortune" || other === "silktouch" ) },
 	id: 0,
-	color: "white" },
+	color: "white"
+},
 {
 	name: "protection",
 	weight: 10,
@@ -22,7 +26,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId >= 4 && iId < 8; },
 	applies: function( other ) { return !( other === "protection" || other === "fireprotection" || other === "blastprotection" ||other === "projectileprotection" ) },
 	id: 1,
-	color: "blue" },
+	color: "blue"
+},
 {
 	name: "fireprotection",
 	weight: 5,
@@ -33,7 +38,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId >= 4 && iId < 8; },
 	applies: function( other ) { return !( other === "protection" || other === "fireprotection" || other === "blastprotection" ||other === "projectileprotection" ) },
 	id: 2,
-	color: "red" },
+	color: "red"
+},
 {
 	name: "featherfall",
 	weight: 5,
@@ -44,7 +50,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId === 7 },
 	applies: function( other ) { return other !== "featherfall" },
 	id: 3,
-	color: "grey" },
+	color: "grey"
+},
 {
 	name: "blastprotection",
 	weight: 2,
@@ -55,7 +62,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId >= 4 && iId < 8; },
 	applies: function( other ) { return !( other === "protection" || other === "fireprotection" || other === "blastprotection" ||other === "projectileprotection" ) },
 	id: 4,
-	color: "black" },
+	color: "black"
+},
 {
 	name: "projectileprotection",
 	weight: 2,
@@ -66,7 +74,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId >= 4 && iId < 8; },
 	applies: function( other ) { return !( other === "protection" || other === "fireprotection" || other === "blastprotection" ||other === "projectileprotection" ) },
 	id: 5,
-	color: "green" },
+	color: "green"
+},
 {
 	name: "respiration",
 	weight: 2,
@@ -77,7 +86,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId === 4 },
 	applies: function( other ) { return  other !== "respiration" },
 	id: 6,
-	color: "lime" },
+	color: "lime"
+},
 {
 	name: "aquaaffinity",
 	weight: 2,
@@ -88,7 +98,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId === 4; },
 	applies: function( other ) { return other !== "aquaaffinity"  },
 	id: 7,
-	color: "teal" },
+	color: "teal"
+},
 {
 	name: "sharpness",
 	weight: 10,
@@ -99,7 +110,7 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId === 1 ; },
 	applies: function( other ) { return !( other === "baneofarthropods" || other === "smite" || other === "sharpness" ) },
 	id: 8,
-	color: "orange" },
+	color: "yellow" },
 {
 	name: "smite",
 	weight: 5,
@@ -110,7 +121,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId === 1; },
 	applies: function( other ) { return !(other === "baneofarthropods" || other === "smite" || other === "sharpness") },
 	id: 9,
-	color: "sienna" },
+	color: "sienna"
+},
 {
 	name: "baneofarthropods",
 	weight: 5,
@@ -121,7 +133,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId === 1; },
 	applies: function( other ) { return !( other === "baneofarthropods" || other === "smite" || other === "sharpness" ) },
 	id: 10,
-	color: "olive" },
+	color: "olive"
+},
 {
 	name: "knockback",
 	weight: 5,
@@ -132,7 +145,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId === 1; },
 	applies: function( other ) { return other !== "knockback" },
 	id: 11,
-	color: "lightblue" },
+	color: "lightblue"
+},
 {
 	name: "fireaspect",
 	weight: 2,
@@ -143,7 +157,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId === 1; },
 	applies: function( other ) { return other !== "fireaspect" },
 	id: 12,
-	color: "salmon" },
+	color: "orange"
+},
 {
 	name: "looting",
 	weight: 2,
@@ -154,7 +169,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId === 1; },
 	applies: function( other ) { return other !== "looting" },
 	id: 13,
-	color: "navy" },
+	color: "navy"
+},
 {
 	name: "efficiency",
 	weight: 10,
@@ -165,7 +181,8 @@ var _enchantments = [
 	canEnchant: function(mId,iId) { return iId === 0 || iId === 2 || iId === 3; },
 	applies: function( other ) { return !( other === "efficiency" ) },
 	id: 14,
-	color: "orchid" },
+	color: "orchid"
+},
 {
 	name: "silktouch",
 	weight: 1,
@@ -190,52 +207,52 @@ var _enchantments = [
 	id: 16,
 	color: "turquoise"
 },
-	{
-		name: "damage",
-		weight: 10,
-		minlevel: 1,
-		maxlevel: 5,
-		maxEnchant: function( i ){ return this.minEnchant(i) + 15;},
-		minEnchant: function( i ){  return 1+(i-1)*10;},
-		canEnchant: function(mId,iId) { return iId === 8; },
-		applies: function( other ) { return other !== "damage" },
-		id: 17,
-		color: "yellow"
-	},
-	{
-		name: "fireaspect",
-		weight: 2,
-		minlevel: 1,
-		maxlevel: 1,
-		maxEnchant: function( i ){ return 50;},
-		minEnchant: function( i ){  return 20;},
-		canEnchant: function(mId,iId) { return iId === 8; },
-		applies: function( other ) { return other !== "fireaspect" },
-		id: 18,
-		color: "orange"
-	},
-	{
-		name: "knockback",
-		weight: 2,
-		minlevel: 1,
-		maxlevel: 2,
-		maxEnchant: function( i ){ return this.minEnchant(i) + 25;},
-		minEnchant: function( i ){  return 12+(i-1)*20;},
-		canEnchant: function(mId,iId) { return iId === 8; },
-		applies: function( other ) { return other !== "knockback" },
-		id: 19,
-		color: "blue"
-	},
-	{
-		name: "infinite",
-		weight: 1,
-		minlevel: 1,
-		maxlevel: 1,
-		maxEnchant: function( i ){ return 50;},
-		minEnchant: function( i ){  return 20;},
-		canEnchant: function(mId,iId) { return iId === 8; },
-		applies: function( other ) { return other !== "infinite" },
-		id: 20,
-		color: "pink"
-	}
+{
+	name: "power",
+	weight: 10,
+	minlevel: 1,
+	maxlevel: 5,
+	maxEnchant: function( i ){ return this.minEnchant(i) + 15;},
+	minEnchant: function( i ){  return 1+(i-1)*10;},
+	canEnchant: function(mId,iId) { return iId === 8; },
+	applies: function( other ) { return other !== "power" },
+	id: 17,
+	color: "yellow"
+},
+{
+	name: "flame",
+	weight: 2,
+	minlevel: 1,
+	maxlevel: 1,
+	maxEnchant: function( i ){ return 50;},
+	minEnchant: function( i ){  return 20;},
+	canEnchant: function(mId,iId) { return iId === 8; },
+	applies: function( other ) { return other !== "flame" },
+	id: 18,
+	color: "orange"
+},
+{
+	name: "punch",
+	weight: 2,
+	minlevel: 1,
+	maxlevel: 2,
+	maxEnchant: function( i ){ return this.minEnchant(i) + 25;},
+	minEnchant: function( i ){  return 12+(i-1)*20;},
+	canEnchant: function(mId,iId) { return iId === 8; },
+	applies: function( other ) { return other !== "punch" },
+	id: 19,
+	color: "lightblue"
+},
+{
+	name: "infinity",
+	weight: 1,
+	minlevel: 1,
+	maxlevel: 1,
+	maxEnchant: function( i ){ return 50;},
+	minEnchant: function( i ){  return 20;},
+	canEnchant: function(mId,iId) { return iId === 8; },
+	applies: function( other ) { return other !== "infinity" },
+	id: 20,
+	color: "pink"
+}
 ];
