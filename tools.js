@@ -5,7 +5,7 @@ foreach: function( list, callback )
 	for( var item in list )
 	{
 		if( list.hasOwnProperty( item ) )
-			callback( list[item] );
+			callback( list[item], item );
 	}
 },
 
@@ -17,6 +17,11 @@ where: function( list, callback )
 			items[items.length] = item;
 	});
 	return items;
+},
+
+wrapPercent: function( p, s )
+{
+	return "(" + Math.floor( p * 100 ) + "+-" + Math.floor( s * 1000 ) / 10 + "%)";
 },
 
 /*

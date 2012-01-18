@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Minecraft Enchantment Simulator v1.5</title>
+<title>Minecraft Enchantment Simulator v1.6</title>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="storage.js"></script>
+<script type="text/javascript" src="iterator.js"></script>
+<script type="text/javascript" src="tools.js"></script>
+<script type="text/javascript" src="collection.js"></script>
 <script type="text/javascript" src="enchantments.js"></script>
 <script type="text/javascript" src="page.js"></script>
+<script type="text/javascript" src="chart.js"></script>
 <script type="text/javascript" src="mc.js"></script>
 
 <script type="text/javascript">
@@ -24,71 +28,87 @@ function simulate()
 {
 	_page.clear();
 
-	var statsSimulateEnchantment = {};
-	var statsEnchantmentCount = {};
-	
+	var statsSimulateEnchantment = makeGroupedCollection( _tools );
+	var statsEnchantmentCount = makeCollection( _tools );
 	var totalEnchantments = 0;
 	var misses = 0;
-	var data = getInputData();
+
+	var calculateStdDev = function()
+	{
+		statsEnchantmentCount.updateSum();
+		statsSimulateEnchantment.updateSum();
+	};
+
+	var collecthelper = function( result )
+	{
+		statsSimulateEnchantment.report( result.enchantment.id, result.enchantmentLevel );
+	};
+
+	var collectStats = function( result )
+	{
+		totalEnchantments += result.length;
+		if( result.length === 0 )
+			misses++;
+		statsEnchantmentCount.report(result.length);
+		_tools.foreach( result, collecthelper )
+	};
+
+	var it = makeIterator( simulateEnchantments, collectStats );
+
+	var iterate = function( data )
+	{
+		it.run( data.iterations, data );
+	};
+
+	var sim = makeIterator( iterate, calculateStdDev );
+
+
+
+	var data = _page.getInputData();
+
 	var baseLevel = getBaseEnchantmentLevel( data.itemId, data.materialId );
-	write( "Base enchantment level for tool: " + baseLevel );
+
+	_page.write( "Base enchantment level for tool: " + baseLevel );
+
 	if( baseLevel <= 0 )
 	{
-		write( "Not enchantable!" );
+		_page.write( "Not enchantable!" );
 		return;
 	}
-	write( "Simulating enchanting " + data.material + " " + data.item + " " + data.iterations + " times over " + data.simulations +" series." );
-	for( var sim = 0; sim < data.simulations; sim++)
-	{
-		for( var iter = 0; iter<data.iterations; iter++)
-		{
-			var results = simulateEnchantments(data.itemId, data.materialId, data.level);
 
-			totalEnchantments += results.length;
-			if( results.length === 0 )
-				misses++;
+	_page.write( "Simulating enchanting " + data.material + " " + data.item + " " + data.iterations + " times over " + data.simulations +" series." );
 
-			ensureVar( statsEnchantmentCount, results.length, { sum:0, sqsum:0, x:0, n:0 } );
-			statsEnchantmentCount[results.length].x++;
+	sim.run( data.simulations, data );
 
-			for( var i = 0; i<results.length; i++ )
-			{
-				var result = results[i];
-				ensureStatsVars( statsSimulateEnchantment, result );
-				statsSimulateEnchantment[result.enchantment.id][result.enchantmentLevel].x++;
-			}
-		}
-		updateSum(statsEnchantmentCount);
-		for( var id in statsSimulateEnchantment )
-			updateSum( statsSimulateEnchantment[id] );
-	}
-	write( "Done, presenting data..." );
+	_page.write( "Done, presenting data..." );
 	if(misses > 0 )
-	write ("Missed enchanting " + misses + " times.");
+		_page.write ("Missed enchanting " + misses + " times.");
 	
-	var maxHeight = 240;
-	var columnCount = 0;
-	var columnWidth = 23;
-	write( "Enchantment count saturation: " + totalEnchantments / (data.simulations*data.iterations) );
-	for( var count in statsEnchantmentCount )
+	_page.write( "Enchantment count saturation: " + totalEnchantments / (data.simulations*data.iterations) );
+
+	var writeNInfo = function( p,s,label )
 	{
-		writeChartBarWithStdev( statsEnchantmentCount[count], data.iterations, "#num", maxHeight, columnWidth*columnCount++ + 1, "white", function(p,s){
-		return count + " enchantments in "+ parseInt( p *100) +"+-"+parseInt(s*1000)/10+"% of simulated cases";}, data.showstdev);
-	}
-	write();
-	columnCount=0;
-	for( var id in statsSimulateEnchantment )
+		return label + " enchantments: " + _tools.wrapPercent(p,s);
+	};
+
+	var nWriter = makeChart( 240, 23, "#num", "white", writeNInfo, data.iterations, data.showstdev, _page );
+
+	statsEnchantmentCount.foreach( nWriter.drawNext );
+
+	_page.write();
+
+	var writeCInfo = function(enchantment,p,s,level)
 	{
-		var enchantment = _enchantments[id];
-		var probabilitySum = 0;
-		for( var level in statsSimulateEnchantment[id] )
+		return enchantment.name + " " + level + ": " + _tools.wrapPercent( p, s );
+	};
+
+	var drawController = makeDrawController( 240, 23, "#sim", writeCInfo, data.iterations, data.showstdev, _page,
+		function( enchantment, p )
 		{
-			writeChartBarWithStdev( statsSimulateEnchantment[id][level], data.iterations, "#sim", maxHeight, columnWidth*columnCount++ +1, enchantment.color, function(p,s){
-				probabilitySum += p;
-				return enchantment.name + " " + level + " ("+parseInt(p*100)+"+-"+parseInt(s*1000)/10+"%)"; }, data.showstdev);
-		}
-		write( "Total probability for " + enchantment.name + ": " + parseInt(probabilitySum*100) + "%" );
-	}
+			_page.write("Total probability for " + enchantment.name + ": " + Math.floor(p*100) + "%" );
+		} );
+
+	statsSimulateEnchantment.foreach( drawController );
 }
 
 </script>
@@ -158,7 +178,7 @@ Item: <select id="item" onchange="simulate()">
 <option value="bow">Bow</option>
 </select>
 |
-Level: <input value="30" id="level" onchange="simulate()" /> <input type="button" onclick="addLevel()" value="+"/> <input type="button" onclick="removeLevel()" value="-" /> |
+Level: <input value="30" id="level" onchange="simulate()" /> <input type="button" onclick="_page.addLevel()" value="+"/> <input type="button" onclick="_page.removeLevel()" value="-" /> |
 Simulations: <input id="trials" onchange="simulate()" /> | Show confidence intervals: <input type="checkbox" id="stdev" onchange="simulate()"/> | <input type="button" onclick="simulate()" value="Go"/>
 </form>
 <div class="chartcontainer">
