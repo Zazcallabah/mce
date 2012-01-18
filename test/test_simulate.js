@@ -1,3 +1,4 @@
+var _page = makePage();
 describe('enchantmentlist',function(){
 	it('when striped removes self',function(){
 
@@ -10,10 +11,10 @@ describe('enchantmentlist',function(){
 
 describe( 'id-function', function(){
 	it('supports bow',function(){
-		expect(getItemId("bow")).toBe(8);
+		expect(_page.getItemId("bow")).toBe(8);
 	});
 	it('defaults to -1', function(){
-		expect(getItemId("")).toBe(-1);
+		expect(_page.getItemId("")).toBe(-1);
 	});
 });
 

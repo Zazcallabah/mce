@@ -52,8 +52,8 @@ ensureVar: function( target, variable, value )
 
 ensureStatsVars: function( vars, result )
 {
-	ensureVar( vars, result.enchantment.id, {} );
-	ensureVar( vars[result.enchantment.id], result.enchantmentLevel, {sum:0,sqsum:0,x:0,n:0} );
+	this.ensureVar( vars, result.enchantment.id, {} );
+	this.ensureVar( vars[result.enchantment.id], result.enchantmentLevel, {sum:0,sqsum:0,x:0,n:0} );
 }
 
 }; };

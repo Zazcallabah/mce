@@ -1,4 +1,4 @@
-
+var _tools = makeTools();
 describe('enchantments', function(){
 
 	it('all have unique ids', function(){
@@ -38,5 +38,5 @@ describe('enchantments', function(){
 
 function getEnchant( name )
 {
-	return where( _enchantments, function(e){return e.name === name})[0];
+	return _tools.where( _enchantments, function(e){return e.name === name})[0];
 }
