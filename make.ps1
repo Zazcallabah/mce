@@ -17,6 +17,10 @@ $one = ReplaceWithFile $_ "storage.js"
 $two = ReplaceWithFile $one "enchantments.js"
 $three = ReplaceWithFile $two "page.js"
 $four = ReplaceWithFile $three "mc.js"
-Add-Content mce.html $four
+$five = ReplaceWithFile $four "iterator.js"
+$six = ReplaceWithFile $five "tools.js"
+$seven = ReplaceWithFile $six "collection.js"
+$eight = ReplaceWithFile $seven "chart.js"
+Add-Content mce.html $eight
 }
 
