@@ -76,7 +76,11 @@ function simulate()
 		return;
 	}
 
-	_page.write( "Simulating enchanting " + data.material + " " + data.item + " " + data.iterations + " times over " + data.simulations +" series." );
+	_page.write( "Simulating enchanting "
+		+ data.material + " "
+		+ data.item + " " 
+		+ data.iterations + " times over " 
+		+ data.simulations +" series." );
 
 	sim.run( data.simulations, data );
 
@@ -178,8 +182,12 @@ Item: <select id="item" onchange="simulate()">
 <option value="bow">Bow</option>
 </select>
 |
-Level: <input value="30" id="level" onchange="simulate()" /> <input type="button" onclick="_page.addLevel()" value="+"/> <input type="button" onclick="_page.removeLevel()" value="-" /> |
-Simulations: <input id="trials" onchange="simulate()" /> | Show confidence intervals: <input type="checkbox" id="stdev" onchange="simulate()"/> | <input type="button" onclick="simulate()" value="Go"/>
+Level: <input value="30" id="level" onchange="simulate()" />
+<input type="button" onclick="_page.addLevel()" value="+"/>
+<input type="button" onclick="_page.removeLevel()" value="-" /> |
+Simulations: <input id="trials" onchange="simulate()" /> |
+Show confidence intervals: <input type="checkbox" id="stdev" onchange="simulate()"/> |
+<input type="button" onclick="simulate()" value="Go"/>
 </form>
 <div class="chartcontainer">
 
