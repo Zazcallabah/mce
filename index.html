@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Minecraft Enchantment Simulator v1.6</title>
+<title>Minecraft Enchantment Simulator v1.7</title>
 
 <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="js/storage.js"></script>
@@ -68,6 +68,7 @@ function simulate()
 
 	var baseLevel = getBaseEnchantmentLevel( data.itemId, data.materialId );
 
+	_page.write("");
 	_page.write( "Base enchantment level for tool: " + baseLevel );
 
 	if( baseLevel <= 0 )
@@ -116,88 +117,133 @@ function simulate()
 }
 
 </script>
+	<link href="css/bootstrap.min.css" rel="stylesheet"/>
 <style type="text/css">
-.textholder, .chartholder
+body
 {
-border: 1px solid black;
-margin: 3em;
-padding: 1em;
+	padding-top: 50px;
 }
-.chartcontainer
-{
-float:left;
-width: 40%;
-margin: 2em;
-padding: 2em;
-}
-.textholder
-{
-	float: right;
-	width: 30%;
-}
+
 .chartholder
 {
+	border: 1px solid black;
 	position: relative;
 	height: 240px;
-	width: 100%;
 }
-
 .chartholder div
 {
-border: 1px solid black;
-bottom:1px;
-width: 20px;
-position:absolute;
-}
-
-.debug
-{
-display:none;
-font-size:0.5em;
-color: #999;
+	border: 1px solid black;
+	bottom:1px;
+	width: 20px;
+	position:absolute;
 }
 </style>
 </head>
 <body>
-<form>
-Material: <select id="material" onchange="simulate()">
-<option value="diamond">Diamond</option>
-<option value="iron">Iron</option>
-<option value="gold">Gold</option>
-<option value="leather">Leather</option>
-<option value="stone">Stone</option>
-<option value="chain">Chainmail</option>
-<option value="wood">Wood</option>
-</select>
-|
-Item: <select id="item" onchange="simulate()">
-<option value="pickaxe">Pickaxe</option>
-<option value="sword">Sword</option>
-<option value="axe">Axe</option>
-<option value="shovel">Shovel</option>
-<option value="helmet">Helmet</option>
-<option value="chestplate">Chestplate</option>
-<option value="leggings">Leggings</option>
-<option value="boots">Boots</option>
-<option value="bow">Bow</option>
-</select>
-|
-Level: <input value="30" id="level" onchange="simulate()" />
-<input type="button" onclick="_page.addLevel()" value="+"/>
-<input type="button" onclick="_page.removeLevel()" value="-" /> |
-Simulations: <input id="trials" onchange="simulate()" /> |
-Show confidence intervals: <input type="checkbox" id="stdev" onchange="simulate()"/> |
-<input type="button" onclick="simulate()" value="Go"/>
-</form>
-<div class="chartcontainer">
-
-Probability that enchantment will be included:
-<div class="chartholder" id="sim"></div>
-
-Probability to get N enchantments:
-<div class="chartholder" id="num"></div>
-
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="brand" href="#">Minecraft Enchantment Simulator</a>
+		</div>
+	</div>
 </div>
-<div class="textholder" id="output"></div>
+<div class="container">
+	<div class="row">
+		<div class="span3">
+			<form class="well form-inline">
+				<fieldset>
+					<legend>Select input</legend>
+					<div class="control-group">
+						<label class="control-label">Material</label>
+						<div class="controls">
+							<select id="material" class="span2"  onchange="simulate()">
+								<option value="diamond">Diamond</option>
+								<option value="iron">Iron</option>
+								<option value="gold">Gold</option>
+								<option value="leather">Leather</option>
+								<option value="stone">Stone</option>
+								<option value="chain">Chainmail</option>
+								<option value="wood">Wood</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Item</label>
+						<div class="controls">
+							<select id="item" class="span2" onchange="simulate()">
+								<option value="pickaxe">Pickaxe</option>
+								<option value="sword">Sword</option>
+								<option value="axe">Axe</option>
+								<option value="shovel">Shovel</option>
+								<option value="helmet">Helmet</option>
+								<option value="chestplate">Chestplate</option>
+								<option value="leggings">Leggings</option>
+								<option value="boots">Boots</option>
+								<option value="bow">Bow</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Level</label>
+						<div class="controls">
+							<input value="30" id="level" class="span1" onchange="simulate()" />
+							<button class="btn" onclick="_page.addLevel()">+</button>
+							<button class="btn" onclick="_page.removeLevel()">-</button>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Simulations</label>
+						<div class="controls">
+							<input id="trials" class="span2" onchange="simulate()" />
+						</div>
+					</div>
+
+					<div class="control-group">
+						<div class="controls">
+							<label class="checkbox">
+								<input type="checkbox" id="stdev" onchange="simulate()">
+								Show confidence intervals
+							</label>
+						</div>
+					</div>
+
+					<div class="form-actions">
+						<button class="btn btn-info">Run again</button>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+		<div class="span5">
+			<div class="row">
+				<div class="span5">
+					<p>Probability that enchantment will be included</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="chartholder span5" id="sim"></div>
+			</div>
+			<div class="row"><p>&nbsp;</p></div>
+			<div class="row">
+				<div class="span5">
+					<p>Probability to get N enchantments</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="chartholder span5" id="num"></div>
+			</div>
+		</div>
+		<div class="span3">
+			<pre id="output" class="textholder"></pre>
+		</div>
+	</div>
+	<hr/>
+	<footer>
+		<p>
+			This project lives at <a href="http://github.com/zazcallabah/mce">github.com/zazcallabah/mce</a>.<br/>
+			<small>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a><br/>
+			Made with the help of <a href="http://jquery.com">jQuery 1.7.1</a> and <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>.</small>
+		</p>
+	</footer>
+</div>
 </body>
 </html>

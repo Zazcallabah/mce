@@ -7,12 +7,7 @@ write: function( str )
 {
 	if(str === undefined )
 		str = " ";
-	$("#output")[0].innerHTML += "<pre>"+str + "\n</pre>";
-},
-
-writev: function( str )
-{
-	$("#output")[0].innerHTML += "<p class=\"debug\">" + str + "</p>\n";
+	$("#output")[0].innerHTML += str + "\n";
 },
 
 /*
