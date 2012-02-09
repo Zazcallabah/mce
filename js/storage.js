@@ -1,5 +1,6 @@
 var makeStorage = function() { return {
 
+	var dataLabel = "mce_data_932"
 getDefault: function()
 {
 	return {
@@ -19,7 +20,7 @@ saveData: function( data )
 	var jsonData = JSON.stringify( data );
 	if( typeof(localStorage) !== undefined )
 	{
-		localStorage.setItem( "data", jsonData )
+		localStorage.setItem( dataLabel, jsonData )
 	}
 },
 
@@ -27,7 +28,7 @@ getData: function()
 {
 	if( typeof(localStorage) !== undefined )
 	{
-		var storedData = localStorage.getItem( "data" );
+		var storedData = localStorage.getItem( dataLabel );
 		if( storedData === null || storedData === undefined )
 		{
 			storedData = this.getDefault();
