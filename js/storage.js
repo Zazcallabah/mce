@@ -11,7 +11,7 @@ getDefault: function()
 		itemId: 0,
 		iterations: 200,
 		simulations: 25,
-		showstdev: true
+		showstdev: false
 	};
 },
 
