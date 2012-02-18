@@ -3,13 +3,10 @@ Minecraft Enchantment Simulator
 
 Instructions:
 To download, click on the download tab in the upper right corner of the github page and select 'Single download version'.
-- or - fork this repo and download the entire source.
+- or -
+Fork this repo (or download a tagged version) and open index.html in chrome. (Almost works in firefox. Should work in safari, but that is untested.)
 
-Then just open index.html in chrome. (Almost works in firefox. Should work in safari, but that is untested.)
-
-Choose material and item type from the menu at the top. The graphs will immediately update to represent the simulated
-probability of receiving different possible enchantments. Use the + and - buttons to select a chosen enchantment level
-and see how the probabilities change.
+Choose material and item type from the menu at the left. The graphs will immediately update to represent the simulated probability of receiving different possible enchantments. Use the + and - buttons to select a chosen enchantment level and see how the probabilities change.
 
 
 
