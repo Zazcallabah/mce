@@ -1,4 +1,3 @@
-
 /*
  * The extracted data for each enchantment type. Source: Minecraft source, deobfuscated using the Minecraft Coder Pack
  */
@@ -32,7 +31,7 @@ var _enchantments = [
 	name: "fireprotection",
 	weight: 5,
 	minlevel: 1,
-	maxlevel: 3,
+	maxlevel: 4,
 	maxEnchant: function( i ){ return this.minEnchant(i) + 12;},
 	minEnchant: function( i ){  return 10+(i-1)*8;},
 	canEnchant: function(mId,iId) { return iId >= 4 && iId < 8; },
@@ -44,7 +43,7 @@ var _enchantments = [
 	name: "featherfall",
 	weight: 5,
 	minlevel: 1,
-	maxlevel: 3,
+	maxlevel: 4,
 	maxEnchant: function( i ){ return this.minEnchant(i) + 10;},
 	minEnchant: function( i ){  return 5+(i-1)*6;},
 	canEnchant: function(mId,iId) { return iId === 7 },
@@ -56,7 +55,7 @@ var _enchantments = [
 	name: "blastprotection",
 	weight: 2,
 	minlevel: 1,
-	maxlevel: 3,
+	maxlevel: 4,
 	maxEnchant: function( i ){ return this.minEnchant(i) + 12;},
 	minEnchant: function( i ){  return 5+(i-1)*8;},
 	canEnchant: function(mId,iId) { return iId >= 4 && iId < 8; },
@@ -68,7 +67,7 @@ var _enchantments = [
 	name: "projectileprotection",
 	weight: 2,
 	minlevel: 1,
-	maxlevel: 3,
+	maxlevel: 4,
 	maxEnchant: function( i ){ return this.minEnchant(i) + 15;},
 	minEnchant: function( i ){  return 3+(i-1)*6;},
 	canEnchant: function(mId,iId) { return iId >= 4 && iId < 8; },
