@@ -1,6 +1,6 @@
-var makeStorage = function() { return {
-
-	var dataLabel = "mce_data_932"
+var makeStorage = function() {
+	var dataLabel = "mce_data_932";
+	return {
 getDefault: function()
 {
 	return {

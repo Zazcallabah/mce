@@ -65,7 +65,7 @@ var _enchantments = [
 },
 {
 	name: "projectileprotection",
-	weight: 2,
+	weight: 5,
 	minlevel: 1,
 	maxlevel: 4,
 	maxEnchant: function( i ){ return this.minEnchant(i) + 15;},
