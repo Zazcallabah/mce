@@ -29,13 +29,11 @@ clearAll: function( identifier )
 addLevel: function()
 {
 	this.changeLevel(1);
-	simulate();
 },
 
 removeLevel: function()
 {
 	this.changeLevel(-1);
-	simulate();
 },
 
 /*
