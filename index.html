@@ -20,6 +20,9 @@ var _page = makePage( _storage, _tools );
 
 $(document).ready(function()
 {
+	$("#add").click( function(){ _page.addLevel(); simulate(); } );
+	$("#remove").click( function(){ _page.removeLevel(); simulate(); } );
+	$("#runagain").click( function(){ simulate() });
 	_page.setInitialValues();
 	simulate();
 });
@@ -187,8 +190,8 @@ body
 						<label class="control-label">Level</label>
 						<div class="controls">
 							<input value="30" id="level" class="span1" onchange="simulate()" />
-							<button class="btn" onclick="_page.addLevel()">+</button>
-							<button class="btn" onclick="_page.removeLevel()">-</button>
+							<button class="btn" id="add">+</button>
+							<button class="btn" id="remove">-</button>
 						</div>
 					</div>
 					<div class="control-group">
@@ -208,7 +211,7 @@ body
 					</div>
 
 					<div class="form-actions">
-						<button class="btn btn-info">Run again</button>
+						<button id="runagain" class="btn btn-info">Run again</button>
 					</div>
 				</fieldset>
 			</form>
