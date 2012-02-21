@@ -44,8 +44,8 @@ validateFields: function()
 	var defaultvalues = storage.getDefault();
 
 	var level = parseInt($("#level")[0].value,10);
-	if( level < 0 )
-		$("#level")[0].value = 0;
+	if( level < 1 )
+		$("#level")[0].value = 1;
 	if( level > 50 )
 		$("#level")[0].value = 50;
 	if( isNaN( level ) )
