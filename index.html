@@ -113,7 +113,7 @@ function simulate()
 	var drawController = makeDrawController( 240, 23, "#sim", writeCInfo, data.iterations, data.showstdev, _page,
 		function( enchantment, p )
 		{
-			_page.write("Total probability for " + enchantment.name + ": " + Math.floor(p*100) + "%" );
+			_page.write("Total prob. for " + enchantment.name + ": " + Math.floor(p*100) + "%" );
 		} );
 
 	statsSimulateEnchantment.foreach( drawController );
