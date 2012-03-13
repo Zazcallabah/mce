@@ -94,7 +94,7 @@ function simulateEnchantmentsInternal( itemId, matId, level, getModdedLevelCallb
 	if( enchantment === undefined )
 		write( "ERR" );
 
-	for(var i = moddedLevel / 2; Math.floor(Math.random() * 50) <= i && enchantmentlist.length > 0; i /= 2)
+	for(var i = Math.floor(moddedLevel / 2); Math.floor(Math.random() * 50) <= i && enchantmentlist.length > 0; i = Math.floor(i / 2) )
 	{
 		enchantmentlist = stripeIncompatibleEnchantmentsCallback( enchantment, enchantmentlist );
 		if( enchantmentlist.length > 0 )
