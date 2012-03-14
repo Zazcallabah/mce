@@ -56,7 +56,7 @@ validateFields: function()
 			$("#trials")[0].value = defaultvalues.iterations + "/" + defaultvalues.simulations;
 },
 
-writeChartBarWithStdev: function( dataset, iterations, divid, maxHeight, yOffset, color, makeInfo, showstdev )
+writeChartBarWithStdev: function( dataset, iterations, divid, maxHeight, yOffset, enchantmentSettings, makeInfo, showstdev )
 {
 	var percent = dataset.mean / iterations;
 	var stdev = Math.sqrt( dataset.variance ) / iterations;
@@ -67,14 +67,15 @@ writeChartBarWithStdev: function( dataset, iterations, divid, maxHeight, yOffset
 	var lower = maxHeight * (percent - stdev );
 	if(showstdev)
 	{
-		$(divid)[0].innerHTML += this.makeChartBar( info, upper, yOffset, color, 0.5 );
-		$(divid)[0].innerHTML += this.makeChartBar( info, mean, yOffset, color, 0.7 );
-		$(divid)[0].innerHTML += this.makeChartBar( info, lower, yOffset, color, 1 );
+		$(divid)[0].innerHTML += this.makeChartBar( info, upper, yOffset, enchantmentSettings.color, 0.5 );
+		$(divid)[0].innerHTML += this.makeChartBar( info, mean, yOffset, enchantmentSettings.color, 0.7 );
+		$(divid)[0].innerHTML += this.makeChartBar( info, lower, yOffset, enchantmentSettings.color, 1 );
 	}
 	else
 	{
-		$(divid)[0].innerHTML += this.makeChartBar( info, mean, yOffset, color, 1 );
+		$(divid)[0].innerHTML += this.makeChartBar( info, mean, yOffset, enchantmentSettings.color, 1 );
 	}
+	$(divid)[0].innerHTML += "<div style=\"height:1em; left:"+yOffset+"px;bottom:-2em;margin:0.5em;padding:0.3em;border:none\">"+enchantmentSettings.label+"</div>";
 	this.write( info);
 },
 

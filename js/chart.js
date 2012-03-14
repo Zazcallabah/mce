@@ -10,7 +10,7 @@ var makeChart = function( height, width, divid, color, makeInfo, iterations, det
 				divid,
 				height,
 				width*columncount + 1,
-				color,
+				{label:label,color:color},
 				function(p,s){ return makeInfo(p,s,label); },
 				detailed
 				);
