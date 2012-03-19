@@ -7,7 +7,6 @@ var makeStorage = function() {
 			material: model.material(),
 			item: model.item(),
 			level: model.level(),
-			materialId: model.materialId(model.material()),
 			itemId: model.itemId(model.item()),
 			iterations: model.iterations(),
 			simulations: model.simulations(),
@@ -17,6 +16,9 @@ var makeStorage = function() {
 
 	var mapDataToModel = function(model,data)
 	{
+		if( typeof data.material === "string" )
+			data.material = {name:"Diamond",value:0};
+
 		model.material(data.material);
 		model.item(data.item);
 		model.level(data.level);
@@ -29,7 +31,7 @@ var makeStorage = function() {
 setDefault: function( model )
 {
 	mapDataToModel(model, {
-		material: "diamond",
+		material: {name:"Diamond",value:0},
 		item: "pickaxe",
 		level: 30,
 		materialId: 0,

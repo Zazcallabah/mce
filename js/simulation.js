@@ -39,7 +39,7 @@ var makeSim = function(page,tools,model){
 
 		var sim = makeIterator( iterate, calculateStdDev );
 
-		var baseLevel = getBaseEnchantmentLevel( model.itemId(), model.materialId() );
+		var baseLevel = getBaseEnchantmentLevel( model.itemId(), model.material().value );
 
 		page.write("");
 		page.write( "Base enchantment level for tool: " + baseLevel );
@@ -52,7 +52,7 @@ var makeSim = function(page,tools,model){
 		}
 
 		page.write( "Simulating enchanting "
-			+ model.material() + " "
+			+ model.material().name + " "
 			+ model.item() + " "
 			+ model.iterations() + " times over "
 			+ model.simulations() +" series." );

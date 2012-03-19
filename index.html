@@ -57,14 +57,7 @@ body
 					<div class="control-group">
 						<label class="control-label">Material</label>
 						<div class="controls">
-							<select id="material" class="span2" data-bind="value:material">
-								<option value="diamond">Diamond</option>
-								<option value="iron">Iron</option>
-								<option value="gold">Gold</option>
-								<option value="leather">Leather</option>
-								<option value="stone">Stone</option>
-								<option value="chain">Chainmail</option>
-								<option value="wood">Wood</option>
+							<select class="span2" data-bind="options: availableMaterials, optionsText: 'name', value: material">
 							</select>
 						</div>
 					</div>

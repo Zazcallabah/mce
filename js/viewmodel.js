@@ -1,6 +1,14 @@
 var makeViewModel = function()
 {
 	var model = {};
+	model.availableMaterials = ko.observableArray([
+		{name:'Diamond',value: 0},
+		{name:'Iron',value: 1},
+		{name:'Gold',value: 2},
+		{name:'Leather',value: 3},
+		{name:'Stone',value: 4},
+		{name:'Chainmail',value: 5},
+		{name:'Wood',value: 6}]);
 	model.material = ko.observable(null);
 	model.item = ko.observable(null);
 	model.level = ko.observable(null);
@@ -43,23 +51,6 @@ var makeViewModel = function()
 			case 'leggings': return 6;
 			case 'boots': return 7;
 			case 'bow': return 8;
-			default: return -1;
-		}
-	};
-
-	model.materialId = function( name )
-	{
-		if( name ===undefined)
-			name=this.material();
-		switch(name)
-		{
-			case 'diamond': return 0;
-			case 'iron': return 1;
-			case 'gold': return 2;
-			case 'leather': return 3;
-			case 'stone': return 4;
-			case 'chain': return 5;
-			case 'wood': return 6;
 			default: return -1;
 		}
 	};
