@@ -9,15 +9,6 @@ describe('enchantmentlist',function(){
 	});
 });
 
-describe( 'id-function', function(){
-	it('supports bow',function(){
-		expect(_page.getItemId("bow")).toBe(8);
-	});
-	it('defaults to -1', function(){
-		expect(_page.getItemId("")).toBe(-1);
-	});
-});
-
 describe('enchantmentlist', function(){
 	it('when striped based on efficienty', function(){
 		var e1 = {

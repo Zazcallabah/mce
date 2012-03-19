@@ -1,4 +1,3 @@
-var _tools = makeTools();
 describe('enchantments', function(){
 
 	var data = {
@@ -72,6 +71,11 @@ fortune:[20,70,32,82,44,94]
 		}
 	});
 
+	var tools = makeTools();
+	function getEnchant( name )
+	{
+		return tools.where( _enchantments, function(e){return e.name === name})[0];
+	}
 	it('fortune cant apply with silktouch', function()
 	{
 		var f = getEnchant( "fortune" );
@@ -83,7 +87,3 @@ fortune:[20,70,32,82,44,94]
 
 });
 
-function getEnchant( name )
-{
-	return _tools.where( _enchantments, function(e){return e.name === name})[0];
-}

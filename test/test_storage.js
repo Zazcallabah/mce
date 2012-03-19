@@ -1,20 +1,14 @@
 var _storage = makeStorage();
 describe('storage', function(){
 
-	it('can store generic data', function(){
+	it('can retrieve data to model', function(){
 
-		var obj = {
-			one: "one",
-			two: "trolol",
-			three: 2.0
-		};
+		var model = makeViewModel();
+		model.mode( "aoeu");
 
-		_storage.saveData( obj );
 
-		var r = _storage.getData();
+		 _storage.getData(model);
 
-		expect( obj.one ).toBe( r.one );
-		expect( obj.two ).toBe( r.two );
-		expect( obj.three ).toBe( r.three );
+		expect( model.mode() ).not.toBe( "aoeu" );
 	});
 });
