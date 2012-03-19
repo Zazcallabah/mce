@@ -8,6 +8,12 @@ Fork this repo (or download a tagged version) and open index.html in chrome. (Al
 
 Choose material and item type from the menu at the left. The graphs will immediately update to represent the simulated probability of receiving different possible enchantments. Use the + and - buttons to select a chosen enchantment level and see how the probabilities change.
 
+###Modes
+####Graph enchantments
+This mode will display a bar for each possible enchantment given at your selected level. The height of the bar represents the probability to receive the enchantment.
+####Graph levels
+This mode will display a bar for each level. The height of the bar represents the probability for receiving your selected enchantment at the selected power level for that level.
+
 
 
 ##Details:
@@ -22,7 +28,7 @@ confidence interval. (That means that there is a 95 percent chance that the true
 lower line in each bar - based on the simulation.) The middle line in each bar is the mean value. I think the values
 forms a normal distribution around this value, but I'm not sure.
 
-##Charts:
+###Charts:
 Enchantment distribution. - This is the most relevant result of the simulation. Each enchantment seen is
 represented by a bar, with the height being set to the percentage of times that enchantment was seen. Note that since
 some simulations generate several enchantments at once, the sum of the percentages often become more than 100. (How
@@ -31,7 +37,7 @@ much more is given as "enchantment count saturation" in the info box.)
 Number of enchantments - A simple chart that shows the probability of receiving multiple enchantments.
 
 
-##Info box:
+###Info box:
 This is mainly the bar charts in text form for usability purposes.
 
 
