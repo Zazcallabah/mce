@@ -22,16 +22,31 @@ var makeViewModel = function()
 		{name:'Leggings',value: 6},
 		{name:'Boots',value: 7},
 		{name:'Bow',value: 8}]);
-	model.availableEnchantments = ko.observableArray(_enchantments);
-	model.enchantment = ko.observable(0);
-	model.availablePowers = ko.observableArray([1,2,3,4,5]);
-	model.power = ko.observable(1);
 	model.material = ko.observable(null);
 	model.item = ko.observable(null);
 	model.level = ko.observable(null);
 	model.simulations = ko.observable(null);
 	model.iterations = ko.observable(null);
 	model.stdev = ko.observable(null);
+	model.availableEnchantments = ko.computed(function(){
+		var avail = [];
+		for( var e in _enchantments )
+		{
+			var ench = _enchantments[e];
+			if( ench.canEnchant(model.material(),model.item()) )
+				avail.push(ench);
+		}
+		return avail;
+	},model);
+	model.enchantment = ko.observable(0);
+	model.availablePowers = ko.computed(function(){
+		var avail=[];
+		var ench = _enchantments[model.enchantment()];
+		for(var i = ench.minlevel; i<=ench.maxlevel;i++)
+			avail.push( i );
+		return avail;
+	},model);
+	model.power = ko.observable(1);
 
 	model.displayedCharts = ko.observableArray([]);
 	model.addChart = function( chart )
@@ -41,8 +56,8 @@ var makeViewModel = function()
 	};
 	model.clear = function()
 	{
-		model.displayedCharts.pop();
-		model.displayedCharts.pop();
+		while( model.displayedCharts().length > 0 )
+			model.displayedCharts.pop();
 	};
 
 	var changeLevel = function( l )
