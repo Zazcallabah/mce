@@ -71,6 +71,7 @@ var makeBar = function(color,message,label,upper,mean,lower,stdev,distanceleft,d
 	bar.lowerstdev = ko.observable(Math.round(lower)+"px");
 	bar.distanceleft = ko.observable(distanceleft+"px");
 	bar.showstdev = ko.observable(detailed);
+	bar.mainopacity = ko.observable(detailed ? 0.7 : 1.0);
 	return bar;
 };
 
