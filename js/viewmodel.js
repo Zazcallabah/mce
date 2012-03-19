@@ -74,3 +74,31 @@ var makeViewModel = function()
 	};
 	return model;
 };
+
+
+var makeBar = function(color,message,label,upper,mean,lower,stdev,distanceleft,detailed)
+{
+	var bar = {};
+	bar.color = ko.observable(color);
+	bar.detailmessage=ko.observable(message);
+	bar.label = ko.observable(label);
+	bar.pixelheight = ko.observable( Math.round(mean) + "px");
+	bar.stdev = ko.observable(stdev);
+	bar.upperstdev = ko.observable(Math.round(upper)+"px");
+	bar.lowerstdev = ko.observable(Math.round(lower)+"px");
+	bar.distanceleft = ko.observable(distanceleft+"px");
+	bar.showstdev = ko.observable(detailed);
+	return bar;
+};
+
+
+var makeChart = function(title){
+	var chart={};
+	chart.bars = ko.observableArray([]);
+	chart.title = ko.observable(title);
+	chart.addBar= function( bar ){
+		chart.bars.push( bar );
+	};
+	return chart;
+};
+
