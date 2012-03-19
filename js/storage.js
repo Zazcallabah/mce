@@ -66,7 +66,16 @@ getData: function( model )
 			this.saveData( model );
 		}
 		else
-			mapDataToModel(model,JSON.parse(storedData));
+		{
+			var parsed = JSON.parse(storedData);
+			if( typeof parsed.material === "string")
+			{
+				//upgrade
+				this.setDefault(model);
+				this.saveData(model);
+			}
+			else mapDataToModel(model,parsed);
+		}
 	}
 	else
 	{

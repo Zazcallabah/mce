@@ -118,9 +118,8 @@ var makeSim = function(page,tools,model){
 			byLevel();
 		else
 		{
-			byEnchantment(1,20);
-			byEnchantment(21,40);
-			byEnchantment(41,50);
+			byEnchantment(1,25);
+			byEnchantment(26,50);
 		}
 	};
 };
