@@ -76,12 +76,15 @@ var makeViewModel = function()
 		model.item.subscribe(action);
 		model.simulations.subscribe(action);
 		model.iterations.subscribe(action);
+		model.mode.subscribe(action);
+		model.power.subscribe(action);
+		model.enchantment.subscribe(action);
 	};
 	return model;
 };
 
 
-var makeBar = function(color,message,label,upper,mean,lower,stdev,distanceleft,detailed)
+var makeBar = function(color,message,label,upper,mean,lower,stdev,distanceleft,detailed,width)
 {
 	var bar = {};
 	bar.color = ko.observable(color);
@@ -94,6 +97,7 @@ var makeBar = function(color,message,label,upper,mean,lower,stdev,distanceleft,d
 	bar.distanceleft = ko.observable(distanceleft+"px");
 	bar.showstdev = ko.observable(detailed);
 	bar.mainopacity = ko.observable(detailed ? 0.7 : 1.0);
+	bar.width = ko.observable( (width || 20) + "px" );
 	return bar;
 };
 

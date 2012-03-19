@@ -34,7 +34,6 @@ body
 {
 	border: 1px solid black;
 	bottom:1px;
-	width: 20px;
 	position:absolute;
 }
 </style>
@@ -102,11 +101,11 @@ body
 						<label class="control-label">Simulations</label>
 						<div class="controls">
 							<input id="iterations" class="span1" data-bind="value:iterations" />
-							<input id="simulations" class="span1" data-bind="value:simulations" />
+							<input id="simulations" class="span1" data-bind="value:simulations,visible:levelMode" />
 						</div>
 					</div>
 
-					<div class="control-group">
+					<div class="control-group" data-bind="visible:levelMode">
 						<div class="controls">
 							<label class="checkbox">
 								<input type="checkbox" id="stdev" data-bind="checked:stdev"/>
@@ -123,11 +122,11 @@ body
 		<div class="span5" data-bind="foreach:displayedCharts">
 			<div class="row">
 				<div class="chartholder span5" data-bind="foreach:bars">
-					<div data-bind="style:{left:distanceleft}, text:label" style="height:1em;bottom:-2em;margin:0.5em;padding:0.3em;border:none"></div>
+					<div data-bind="style:{left:distanceleft,width:width}, text:label" style="bottom:-1.5em;border:none;text-align:center;"></div>
 					<a data-bind="attr: { title:detailmessage } ">
-						<div data-bind="style:{ height: upperstdev, left:distanceleft, backgroundColor:color},visible:showstdev" style="opacity:0.5"></div>
-						<div data-bind="style:{ height: pixelheight, left:distanceleft, backgroundColor:color, opacity:mainopacity }"></div>
-						<div data-bind="style:{ height: lowerstdev, left:distanceleft, backgroundColor:color},visible:showstdev"></div>
+						<div data-bind="style:{ height: upperstdev, left:distanceleft, width:width, backgroundColor:color},visible:showstdev" style="opacity:0.5"></div>
+						<div data-bind="style:{ height: pixelheight, left:distanceleft, width:width,backgroundColor:color, opacity:mainopacity }"></div>
+						<div data-bind="style:{ height: lowerstdev, left:distanceleft,width:width, backgroundColor:color},visible:showstdev"></div>
 					</a>
 				</div>
 			</div>

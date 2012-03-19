@@ -1,10 +1,6 @@
 var makeSim = function(page,tools,model){
-	return function()
+	var byLevel = function()
 	{
-		page.clear();
-		page.validateFields();
-		_storage.saveData(model);
-
 		var statsSimulateEnchantment = makeGroupedCollection( tools );
 		var statsEnchantmentCount = makeCollection( tools );
 		var totalEnchantments = 0;
@@ -93,6 +89,45 @@ var makeSim = function(page,tools,model){
 		var nWriter = makeBarGroup( 240, 23, "white", writeNInfo, model.iterations(), model.stdev(), page, nChart );
 		statsEnchantmentCount.foreach( nWriter.drawNext );
 	};
+
+	var byEnchantment = function(from,to){
+		var ench = _enchantments[model.enchantment()];
+		var chart = makeChart("Probability by level");
+		model.addChart(chart);
+		var writer = makeBarGroup( 240,18,ench.color,function(p,s,l){return l+": "+Math.round(p*100)+"%"},model.iterations(),false,page,chart,1 );
+		for(var l = from; l<= to;l++)
+		{
+			var collection = makeGroupedCollection(tools);
+			var collectStats = function( result )
+			{
+				tools.foreach( result, function(r){
+				collection.report( r.enchantment.id, r.enchantmentLevel ) });
+			};
+
+			for( var i = 0; i< model.iterations(); i++ )
+			{
+				var res = simulateEnchantments(model,l);
+				collectStats( res );
+			}
+			var data = collection.find(model.enchantment(),model.power()).x;
+			writer.drawNext({mean:data,stdev:0},l);
+		}
+	};
+
+	return function(){
+		page.clear();
+		page.validateFields();
+		_storage.saveData(model);
+
+		if( model.mode() === "level" )
+			byLevel();
+		else
+		{
+			byEnchantment(1,20);
+			byEnchantment(21,40);
+			byEnchantment(41,50);
+		}
+	};
 };
 
 var makeBarGroup = function( height, width, color, makeInfo, iterations, detailed, page, chart, existingcolumns )
@@ -108,7 +143,7 @@ var makeBarGroup = function( height, width, color, makeInfo, iterations, detaile
 			var upper = height * (percent + stdev );
 			var mean = height * percent;
 			var lower = height * (percent - stdev );
-			chart.addBar( makeBar(color,info,label,upper,mean,lower,stdev, width*columncount + 1,detailed));
+			chart.addBar( makeBar(color,info,label,upper,mean,lower,stdev, width*columncount + 1,detailed,width-3));
 			page.write( info);
 			columncount += 1;
 		},

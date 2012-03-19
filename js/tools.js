@@ -96,6 +96,12 @@ var makeCollection = function( tools ) {
 		foreach: function( callback )
 		{
 			tools.foreach( stats, callback );
+		},
+		find: function( label )
+		{
+			if( stats.hasOwnProperty(label))
+				return stats[label];
+			else return {x:0};
 		}
 	};
 };
@@ -108,6 +114,13 @@ var makeGroupedCollection = function( tools ) {
 			if( !collections.hasOwnProperty( position ) )
 				collections[position] = makeCollection( tools );
 			collections[position].report( label );
+		},
+
+		find: function(position,label)
+		{
+			if(collections.hasOwnProperty( position ) )
+				return collections[position].find(label);
+			else return {x:0};
 		},
 
 		updateSum: function()
