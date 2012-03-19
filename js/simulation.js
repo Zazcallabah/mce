@@ -34,7 +34,7 @@ var makeSim = function(page,tools,model){
 		return {total:total,misses:misses};
 	};
 
-	var byLevel = function()
+	var byEnchantment = function()
 	{
 		var statsSimulateEnchantment = makeGroupedCollection( tools );
 		var statsEnchantmentCount = makeCollection( tools );
@@ -94,7 +94,7 @@ var makeSim = function(page,tools,model){
 		statsEnchantmentCount.foreach( nWriter.drawNext );
 	};
 
-	var byEnchantment = function(from,to){
+	var byLevel = function(from,to){
 		var ench = _enchantments[model.enchantment()];
 		var chart = makeChart("Probability by level");
 		model.addChart(chart);
@@ -115,11 +115,13 @@ var makeSim = function(page,tools,model){
 		_storage.saveData(model);
 
 		if( model.mode() === "level" )
-			byLevel();
+		{
+			byLevel(1,25);
+			byLevel(26,50);
+		}
 		else
 		{
-			byEnchantment(1,25);
-			byEnchantment(26,50);
+			byEnchantment();
 		}
 	};
 };

@@ -30,6 +30,7 @@ body
 	position: relative;
 	height: 244px;
 }
+
 .chartholder div
 {
 	border: 1px solid black;
@@ -68,28 +69,28 @@ body
 					<div class="control-group">
 						<div class="controls">
 							<label class="radio">
-								<input type="radio" name="mode" value="level" data-bind="checked:mode">
-								Select level
+								<input type="radio" name="mode" value="enchantment" data-bind="checked:mode">
+								Graph enchantments
 							</label><br/>
 							<label class="radio">
-								<input type="radio" name="mode" value="enchantment" data-bind="checked:mode">
-								Select enchantment
+								<input type="radio" name="mode" value="level" data-bind="checked:mode">
+								Graph levels
 							</label>
 						</div>
 					</div>
-					<div class="control-group" data-bind="visible:enchantmentMode">
+					<div class="control-group" data-bind="visible:levelMode">
 						<label class="control-label" >Enchantment</label>
 						<div class="controls">
 							<select class="span2" data-bind="options: availableEnchantments, optionsText: 'name',optionsValue:'id', value: enchantment"></select>
 						</div>
 					</div>
-					<div class="control-group" data-bind="visible:enchantmentMode">
+					<div class="control-group" data-bind="visible:levelMode">
 						<label class="control-label" >Power</label>
 						<div class="controls">
 							<select class="span2" data-bind="options: availablePowers, value: power"></select>
 						</div>
 					</div>
-					<div class="control-group" data-bind="visible:levelMode">
+					<div class="control-group" data-bind="visible:enchantmentMode">
 						<label class="control-label">Level</label>
 						<div class="controls">
 							<input value="30" id="level" class="span1" data-bind="value:level" />
