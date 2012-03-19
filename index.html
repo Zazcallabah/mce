@@ -63,10 +63,34 @@ body
 					<div class="control-group">
 						<label class="control-label">Item</label>
 						<div class="controls">
-							<select id="item" class="span2" data-bind="options:availableItems,optionsText:'name',optionsValue:'value',value:item"></select>
+							<select class="span2" data-bind="options:availableItems,optionsText:'name',optionsValue:'value',value:item"></select>
 						</div>
 					</div>
 					<div class="control-group">
+						<div class="controls">
+							<label class="radio">
+								<input type="radio" name="mode" value="level" data-bind="checked:mode">
+								Select level
+							</label><br/>
+							<label class="radio">
+								<input type="radio" name="mode" value="enchantment" data-bind="checked:mode">
+								Select enchantment
+							</label>
+						</div>
+					</div>
+					<div class="control-group" data-bind="visible:enchantmentMode">
+						<label class="control-label" >Enchantment</label>
+						<div class="controls">
+							<select class="span2" data-bind="options: availableEnchantments, optionsText: 'name',optionsValue:'id', value: enchantment"></select>
+						</div>
+					</div>
+					<div class="control-group" data-bind="visible:enchantmentMode">
+						<label class="control-label" >Power</label>
+						<div class="controls">
+							<select class="span2" data-bind="options: availablePowers, value: power"></select>
+						</div>
+					</div>
+					<div class="control-group" data-bind="visible:levelMode">
 						<label class="control-label">Level</label>
 						<div class="controls">
 							<input value="30" id="level" class="span1" data-bind="value:level" />

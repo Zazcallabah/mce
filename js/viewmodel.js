@@ -1,6 +1,9 @@
 var makeViewModel = function()
 {
 	var model = {};
+	model.mode = ko.observable("level");
+	model.enchantmentMode = ko.computed(function(){return model.mode() === "enchantment" },model);
+	model.levelMode = ko.computed(function(){return model.mode() === "level" },model);
 	model.availableMaterials = ko.observableArray([
 		{name:'Diamond',value: 0},
 		{name:'Iron',value: 1},
@@ -19,6 +22,10 @@ var makeViewModel = function()
 		{name:'Leggings',value: 6},
 		{name:'Boots',value: 7},
 		{name:'Bow',value: 8}]);
+	model.availableEnchantments = ko.observableArray(_enchantments);
+	model.enchantment = ko.observable(0);
+	model.availablePowers = ko.observableArray([1,2,3,4,5]);
+	model.power = ko.observable(1);
 	model.material = ko.observable(null);
 	model.item = ko.observable(null);
 	model.level = ko.observable(null);

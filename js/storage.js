@@ -9,7 +9,10 @@ var makeStorage = function() {
 			level: model.level(),
 			iterations: model.iterations(),
 			simulations: model.simulations(),
-			showstdev: model.stdev()
+			showstdev: model.stdev(),
+			mode: model.mode(),
+			enchantment: model.enchantment(),
+			power: model.power()
 		};
 	};
 
@@ -21,6 +24,9 @@ var makeStorage = function() {
 		model.iterations(data.iterations);
 		model.simulations(data.simulations);
 		model.stdev( data.showstdev );
+		model.mode( data.mode );
+		model.enchantment( data.enchantment );
+		model.power( data.power );
 	};
 
 	return {
@@ -32,7 +38,10 @@ setDefault: function( model )
 		level: 30,
 		iterations: 200,
 		simulations: 25,
-		showstdev: false
+		showstdev: false,
+		mode: "level",
+		enchantment:0,
+		power:1
 	});
 },
 
