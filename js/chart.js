@@ -1,18 +1,20 @@
 
-var makeBar = function(color,message,label,pxHeight,stdev,distanceleft)
+var makeBar = function(color,message,label,upper,mean,lower,stdev,distanceleft,detailed)
 {
 	var bar = {};
-	bar.color = color;
-	bar.detailmessage=message;
-	bar.label = label;
-	bar.pixelheight = pxHeight;
-	bar.stdev = stdev;
-	bar.distanceleft = distanceleft;
-	bar.opacity = 0.5;
+	bar.color = ko.observable(color);
+	bar.detailmessage=ko.observable(message);
+	bar.label = ko.observable(label);
+	bar.pixelheight = ko.observable( Math.round(mean) + "px");
+	bar.stdev = ko.observable(stdev);
+	bar.upperstdev = ko.observable(Math.round(upper)+"px");
+	bar.lowerstdev = ko.observable(Math.round(lower)+"px");
+	bar.distanceleft = ko.observable(distanceleft+"px");
+	bar.showstdev = ko.observable(detailed);
 	return bar;
 };
 
-var makeBarGroup = function( height, width, color, makeInfo, iterations, detailed, page, existingcolumns, chart )
+var makeBarGroup = function( height, width, color, makeInfo, iterations, detailed, page, chart, existingcolumns )
 {
 	var columncount = existingcolumns || 0;
 	var bargroup = {
@@ -22,8 +24,10 @@ var makeBarGroup = function( height, width, color, makeInfo, iterations, detaile
 			var stdev = Math.sqrt( statEntry.variance ) / iterations;
 
 			var info = makeInfo( percent, stdev, label );
+			var upper = height * (percent + stdev );
 			var mean = height * percent;
-			chart.addBar( makeBar(color,info,label,mean,stdev, width*columncount + 1));
+			var lower = height * (percent - stdev );
+			chart.addBar( makeBar(color,info,label,upper,mean,lower,stdev, width*columncount + 1,detailed));
 			page.write( info);
 			columncount += 1;
 		},
@@ -38,10 +42,10 @@ var makeBarGroup = function( height, width, color, makeInfo, iterations, detaile
 
 var makeChart = function(title){
 	var chart={};
-	chart.bars = ko.observableArray([makeBar(),makeBar()]);
+	chart.bars = ko.observableArray([]);
 	chart.title = ko.observable(title);
 	chart.addBar= function( bar ){
-		bars.push( bar );
+		chart.bars.push( bar );
 	};
 	return chart;
 };
@@ -70,8 +74,8 @@ var makeDrawController = function( height, width, makeInfo, iterations, detailed
 				iterations,
 				detailed,
 				page,
-				maker.currentColumnCount(),
-				chart
+				chart,
+				maker.currentColumnCount()
 			);
 		},
 		callback: function( stats, label ){ maker.drawNext(stats,label); },

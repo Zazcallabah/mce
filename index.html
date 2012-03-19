@@ -18,18 +18,9 @@
 
 <script type="text/javascript">
 var _model = makeViewModel();
-var _storage = makeStorage( _model );
+var _storage = makeStorage();
 var _tools = makeTools();
 var _page = makePage( _storage, _tools, _model );
-
-$(document).ready(function()
-{
-	_storage.getData(_model);
-	var sim = makeSim(_page,_tools, _model );
-	_model.run = sim;
-	ko.applyBindings( _model );
-	_model.setOnChanged( sim );
-});
 </script>
 <style type="text/css">
 body
@@ -130,15 +121,15 @@ body
 		<div class="span5" data-bind="foreach:displayedCharts">
 			<div class="row">
 				<div class="chartholder span5" data-bind="foreach:bars">
-					<div data-bind="style:{left:distanceleft+'px'}, text:label" style="height:1em;bottom:-2em;margin:0.5em;padding:0.3em;border:none"></div>
+					<div data-bind="style:{left:distanceleft}, text:label" style="height:1em;bottom:-2em;margin:0.5em;padding:0.3em;border:none"></div>
 					<a data-bind="attr: { title:detailmessage } ">
-						<div data-bind="style:{ height: (pixelheight+stdev)+'px', left:distanceleft+'px', backgroundColor:color }" style="opacity:0.5"></div>
-						<div data-bind="style:{ height: pixelheight+'px', left:distanceleft+'px', backgroundColor:color }" style="opacity:0.7"></div>
-						<div data-bind="style:{ height: (pixelheight-stdev)+'px', left:distanceleft+'px', backgroundColor:color }"></div>
+						<div data-bind="style:{ height: upperstdev, left:distanceleft, backgroundColor:color }" style="opacity:0.5"></div>
+						<div data-bind="style:{ height: pixelheight, left:distanceleft, backgroundColor:color }" style="opacity:0.7"></div>
+						<div data-bind="style:{ height: lowerstdev, left:distanceleft, backgroundColor:color }"></div>
 					</a>
 				</div>
 			</div>
-			<div class="row" style="margin-top:1em;margin-bottom:2em">
+			<div class="row" style="margin-top:1.5em;margin-bottom:2em">
 				<div class="span5" data-bind="text:title"></div>
 			</div>
 		</div>
@@ -155,5 +146,13 @@ body
 		</p>
 	</footer>
 </div>
+<script type="text/javascript">
+	_storage.getData(_model);
+	var sim = makeSim(_page,_tools, _model );
+	_model.run = sim;
+	ko.applyBindings( _model );
+	_model.setOnChanged( sim );
+	sim();
+</script>
 </body>
 </html>

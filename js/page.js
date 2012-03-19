@@ -31,15 +31,13 @@ clearAll: function( identifier )
  */
 validateFields: function()
 {
-	var defaultvalues = storage.getDefault();
-
 	var level = parseInt(model.level(),10);
 	if( level < 1 )
 		model.level(1);
 	if( level > 50 )
 		model.level(50);
 	if( isNaN( level ) )
-		model.level( defaultvalues.level );
+		model.level( 30 );
 },
 
 makeChartBar: function( detailmessage, pixelheight, distanceleft, color, opacity)

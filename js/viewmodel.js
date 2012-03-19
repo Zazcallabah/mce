@@ -16,7 +16,8 @@ var makeViewModel = function()
 	};
 	model.clear = function()
 	{
-		model.displayedCharts = ko.observableArray([]);
+		model.displayedCharts.pop();
+		model.displayedCharts.pop();
 	};
 
 	var changeLevel = function( l )
@@ -64,12 +65,12 @@ var makeViewModel = function()
 	};
 
 	model.setOnChanged = function( action ){
-		model.level.subscribe(model.run);
-		model.stdev.subscribe(model.run);
-		model.material.subscribe(model.run);
-		model.item.subscribe(model.run);
-		model.simulations.subscribe(model.run);
-		model.iterations.subscribe(model.run);
+		model.level.subscribe(action);
+		model.stdev.subscribe(action);
+		model.material.subscribe(action);
+		model.item.subscribe(action);
+		model.simulations.subscribe(action);
+		model.iterations.subscribe(action);
 	};
 	return model;
 };

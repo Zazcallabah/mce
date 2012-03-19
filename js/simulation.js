@@ -2,8 +2,8 @@ var makeSim = function(page,tools,model){
 	return function()
 	{
 		page.clear();
-		//_storage.saveData(_model);
 		page.validateFields();
+		_storage.saveData(model);
 
 		var statsSimulateEnchantment = makeGroupedCollection( tools );
 		var statsEnchantmentCount = makeCollection( tools );
@@ -47,6 +47,7 @@ var makeSim = function(page,tools,model){
 		if( baseLevel <= 0 )
 		{
 			page.write( "Not enchantable!" );
+			model.addChart(makeChart());
 			return;
 		}
 
@@ -69,19 +70,13 @@ var makeSim = function(page,tools,model){
 			return label + " enchantments: " + tools.wrapPercent(p,s);
 		};
 
-		var nChart = makeChart("Probability to get N enchantments");
-		var nWriter = makeBarGroup( 240, 23, "white", writeNInfo, model.iterations(), model.stdev(), page, nChart );
-
-		statsEnchantmentCount.foreach( nWriter.drawNext );
-
-		page.write();
 
 		var writeCInfo = function(enchantment,p,s,level)
 		{
 			return enchantment.name + " " + level + ": " + _tools.wrapPercent( p, s );
 		};
-
 		var eChart = makeChart("Probability that enchantment will be included");
+		model.addChart(eChart);
 		var drawController = makeDrawController( 240, 23, writeCInfo, model.iterations(), model.stdev(), page,
 			function( enchantment, p )
 			{
@@ -90,7 +85,10 @@ var makeSim = function(page,tools,model){
 		eChart);
 
 		statsSimulateEnchantment.foreach( drawController );
-		model.addChart(eChart);
+		page.write();
+		var nChart = makeChart("Probability to get N enchantments");
 		model.addChart(nChart);
+		var nWriter = makeBarGroup( 240, 23, "white", writeNInfo, model.iterations(), model.stdev(), page, nChart );
+		statsEnchantmentCount.foreach( nWriter.drawNext );
 	};
 };

@@ -1,4 +1,4 @@
-var makeStorage = function(tools) {
+var makeStorage = function() {
 	var dataLabel = "mce_data_932";
 
 	var mapModelToData = function(model)
@@ -7,8 +7,8 @@ var makeStorage = function(tools) {
 			material: model.material(),
 			item: model.item(),
 			level: model.level(),
-			materialId: model.getMaterialId(model.material()),
-			itemId: model.getItemId(model.item()),
+			materialId: model.materialId(model.material()),
+			itemId: model.itemId(model.item()),
 			iterations: model.iterations(),
 			simulations: model.simulations(),
 			showstdev: model.stdev()
@@ -26,9 +26,9 @@ var makeStorage = function(tools) {
 	};
 
 	return {
-getDefault: function()
+setDefault: function( model )
 {
-	return {
+	mapDataToModel(model, {
 		material: "diamond",
 		item: "pickaxe",
 		level: 30,
@@ -37,33 +37,36 @@ getDefault: function()
 		iterations: 200,
 		simulations: 25,
 		showstdev: false
-	};
+	});
 },
 
 saveData: function( model )
 {
-	var data = mapModelToData(model);
-	var jsonData = JSON.stringify( data );
 	if( typeof(localStorage) !== undefined )
 	{
+		var data = mapModelToData(model);
+		var jsonData = JSON.stringify( data );
 		localStorage.setItem( dataLabel, jsonData )
 	}
 },
 
 getData: function( model )
 {
-	var data = this.getDefault();
 	if( typeof(localStorage) !== undefined )
 	{
 		var storedData = localStorage.getItem( dataLabel );
 		if( storedData === null || storedData === undefined )
 		{
-			this.saveData( data );
+			this.setDefault( model );
+			this.saveData( model );
 		}
 		else
-			data = storedData;
+			mapDataToModel(model,JSON.parse(storedData));
 	}
-	mapDataToModel(model,data);
+	else
+	{
+		this.setDefault( model);
+	}
 }
 
 }; };
