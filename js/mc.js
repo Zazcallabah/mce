@@ -74,7 +74,7 @@ function stripeIncompatibleEnchantments( enchantment, list )
 /* Algorithm source: Minecraft source extracted using Minecraft Coder Pack, source file: EnchantmentHelper.java */
 function simulateEnchantments( model )
 {
-	return simulateEnchantmentsInternal(model.itemId(),model.material().value,model.level(),simulateDistr,getEnchantments,selectWeighted,stripeIncompatibleEnchantments);
+	return simulateEnchantmentsInternal(model.item(),model.material(),model.level(),simulateDistr,getEnchantments,selectWeighted,stripeIncompatibleEnchantments);
 }
 
 /* Callbacks used for testing. */

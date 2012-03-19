@@ -38,8 +38,10 @@ var makeSim = function(page,tools,model){
 		};
 
 		var sim = makeIterator( iterate, calculateStdDev );
-
-		var baseLevel = getBaseEnchantmentLevel( model.itemId(), model.material().value );
+		var itemname,materialname;
+		tools.foreach( model.availableItems(), function(item){if( item.value === model.item() ) itemname = item.name; });
+		tools.foreach( model.availableMaterials(), function(mat){if( mat.value === model.material() ) materialname = mat.name; });
+		var baseLevel = getBaseEnchantmentLevel( model.item(), model.material() );
 
 		page.write("");
 		page.write( "Base enchantment level for tool: " + baseLevel );
@@ -52,8 +54,8 @@ var makeSim = function(page,tools,model){
 		}
 
 		page.write( "Simulating enchanting "
-			+ model.material().name + " "
-			+ model.item() + " "
+			+ materialname + " "
+			+ itemname + " "
 			+ model.iterations() + " times over "
 			+ model.simulations() +" series." );
 

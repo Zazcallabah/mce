@@ -57,24 +57,13 @@ body
 					<div class="control-group">
 						<label class="control-label">Material</label>
 						<div class="controls">
-							<select class="span2" data-bind="options: availableMaterials, optionsText: 'name', value: material">
-							</select>
+							<select class="span2" data-bind="options: availableMaterials, optionsText: 'name',optionsValue:'value', value: material"></select>
 						</div>
 					</div>
 					<div class="control-group">
 						<label class="control-label">Item</label>
 						<div class="controls">
-							<select id="item" class="span2" data-bind="value:item">
-								<option value="pickaxe">Pickaxe</option>
-								<option value="sword">Sword</option>
-								<option value="axe">Axe</option>
-								<option value="shovel">Shovel</option>
-								<option value="helmet">Helmet</option>
-								<option value="chestplate">Chestplate</option>
-								<option value="leggings">Leggings</option>
-								<option value="boots">Boots</option>
-								<option value="bow">Bow</option>
-							</select>
+							<select id="item" class="span2" data-bind="options:availableItems,optionsText:'name',optionsValue:'value',value:item"></select>
 						</div>
 					</div>
 					<div class="control-group">

@@ -9,6 +9,16 @@ var makeViewModel = function()
 		{name:'Stone',value: 4},
 		{name:'Chainmail',value: 5},
 		{name:'Wood',value: 6}]);
+	model.availableItems = ko.observableArray([
+		{name:'Pickaxe',value: 0},
+		{name:'Sword',value: 1},
+		{name:'Axe',value: 2},
+		{name:'Shovel',value: 3},
+		{name:'Helmet',value: 4},
+		{name:'Chestplate',value: 5},
+		{name:'Leggings',value: 6},
+		{name:'Boots',value: 7},
+		{name:'Bow',value: 8}]);
 	model.material = ko.observable(null);
 	model.item = ko.observable(null);
 	model.level = ko.observable(null);
@@ -36,24 +46,6 @@ var makeViewModel = function()
 
 	model.addLevel = function(){changeLevel(1);};
 	model.removeLevel=function(){changeLevel(-1);};
-	model.itemId= function( name )
-	{
-		if( name === undefined )
-			name = this.item();
-		switch(name)
-		{
-			case 'pickaxe': return 0;
-			case 'sword': return 1;
-			case 'axe': return 2;
-			case 'shovel': return 3;
-			case 'helmet': return 4;
-			case 'chestplate': return 5;
-			case 'leggings': return 6;
-			case 'boots': return 7;
-			case 'bow': return 8;
-			default: return -1;
-		}
-	};
 
 	model.setOnChanged = function( action ){
 		model.level.subscribe(action);
