@@ -74,8 +74,6 @@ function stripeIncompatibleEnchantments( enchantment, list )
 /* Algorithm source: Minecraft source extracted using Minecraft Coder Pack, source file: EnchantmentHelper.java */
 function simulateEnchantments( model, level )
 {
-	if(level === undefined )
-		level = model.level();
 	return simulateEnchantmentsInternal(model.item(),model.material(),level,simulateDistr,getEnchantments,selectWeighted,stripeIncompatibleEnchantments);
 }
 

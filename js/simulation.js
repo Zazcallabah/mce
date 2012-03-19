@@ -1,39 +1,43 @@
 var makeSim = function(page,tools,model){
-	var byLevel = function()
+
+	var simulate = function(gc,c,level)
 	{
-		var statsSimulateEnchantment = makeGroupedCollection( tools );
-		var statsEnchantmentCount = makeCollection( tools );
-		var totalEnchantments = 0;
-		var misses = 0;
-
-		var calculateStdDev = function()
-		{
-			statsEnchantmentCount.updateSum();
-			statsSimulateEnchantment.updateSum();
-		};
-
+		var total=0,misses=0;
 		var collecthelper = function( result )
 		{
-			statsSimulateEnchantment.report( result.enchantment.id, result.enchantmentLevel );
+			gc.report( result.enchantment.id, result.enchantmentLevel );
 		};
 
 		var collectStats = function( result )
 		{
-			totalEnchantments += result.length;
+			total += result.length;
 			if( result.length === 0 )
 				misses++;
-			statsEnchantmentCount.report(result.length);
+			if( c!== undefined )
+				c.report(result.length);
 			tools.foreach( result, collecthelper )
 		};
-
-		var it = makeIterator( simulateEnchantments, collectStats );
+		var calculateStdDev = function()
+		{
+			if(c!==undefined)
+				c.updateSum();
+			gc.updateSum();
+		};
+		var it = makeIterator( simulateEnchantments, collectStats, level || model.level() );
 
 		var iterate = function()
 		{
 			it.run( model.iterations(), model );
 		};
-
 		var sim = makeIterator( iterate, calculateStdDev );
+		sim.run( model.simulations(), model );
+		return {total:total,misses:misses};
+	};
+
+	var byLevel = function()
+	{
+		var statsSimulateEnchantment = makeGroupedCollection( tools );
+		var statsEnchantmentCount = makeCollection( tools );
 		var itemname,materialname;
 		tools.foreach( model.availableItems(), function(item){if( item.value === model.item() ) itemname = item.name; });
 		tools.foreach( model.availableMaterials(), function(mat){if( mat.value === model.material() ) materialname = mat.name; });
@@ -55,13 +59,13 @@ var makeSim = function(page,tools,model){
 			+ model.iterations() + " times over "
 			+ model.simulations() +" series." );
 
-		sim.run( model.simulations(), model );
+		var sim_result = simulate(statsSimulateEnchantment,statsEnchantmentCount);
 
 		page.write( "Done, presenting data..." );
-		if(misses > 0 )
-			page.write ("Missed enchanting " + misses + " times.");
+		if(sim_result.misses > 0 )
+			page.write ("Missed enchanting " + sim_result.misses + " times.");
 
-		page.write( "Enchantment count saturation: " + totalEnchantments / (model.simulations()*model.iterations()) );
+		page.write( "Enchantment count saturation: " + sim_result.total / (model.simulations()*model.iterations()) );
 
 		var writeNInfo = function( p,s,label )
 		{
@@ -94,23 +98,14 @@ var makeSim = function(page,tools,model){
 		var ench = _enchantments[model.enchantment()];
 		var chart = makeChart("Probability by level");
 		model.addChart(chart);
-		var writer = makeBarGroup( 240,18,ench.color,function(p,s,l){return l+": "+Math.round(p*100)+"%"},model.iterations(),false,page,chart,1 );
+		var writer = makeBarGroup( 240,18,ench.color,function(p,s,l){return l+": "+tools.wrapPercent(p,s)},model.iterations(),model.stdev(),page,chart,1 );
 		for(var l = from; l<= to;l++)
 		{
 			var collection = makeGroupedCollection(tools);
-			var collectStats = function( result )
-			{
-				tools.foreach( result, function(r){
-				collection.report( r.enchantment.id, r.enchantmentLevel ) });
-			};
+			simulate(collection,undefined,l);
 
-			for( var i = 0; i< model.iterations(); i++ )
-			{
-				var res = simulateEnchantments(model,l);
-				collectStats( res );
-			}
-			var data = collection.find(model.enchantment(),model.power()).x;
-			writer.drawNext({mean:data,stdev:0},l);
+			var data = collection.find(model.enchantment(),model.power());
+			writer.drawNext(data,l);
 		}
 	};
 

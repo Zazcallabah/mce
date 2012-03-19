@@ -58,12 +58,12 @@ ensureStatsVars: function( vars, result )
 
 }; };
 
-var makeIterator = function( action, callback ) { return {
+var makeIterator = function( action, callback, param ) { return {
 
 	run: function( times, model ){
 		for( var i = 0; i< times; i++ )
 		{
-			var result = action( model );
+			var result = action( model, param );
 			callback( result );
 		}
 	}
@@ -101,7 +101,7 @@ var makeCollection = function( tools ) {
 		{
 			if( stats.hasOwnProperty(label))
 				return stats[label];
-			else return {x:0};
+			else return { sum:0, sqsum:0, x:0, n:0 };
 		}
 	};
 };
@@ -120,7 +120,7 @@ var makeGroupedCollection = function( tools ) {
 		{
 			if(collections.hasOwnProperty( position ) )
 				return collections[position].find(label);
-			else return {x:0};
+			else return { sum:0, sqsum:0, x:0, n:0 };
 		},
 
 		updateSum: function()
