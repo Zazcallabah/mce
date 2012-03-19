@@ -7,7 +7,7 @@ write: function( str )
 {
 	if(str === undefined )
 		str = " ";
-	$("#output")[0].innerHTML += str + "\n";
+	window.document.getElementById("output").innerHTML += str + "\n";
 },
 
 /*
@@ -16,12 +16,12 @@ write: function( str )
 clear: function()
 {
 	model.clear();
-	this.clearAll(".textholder");
+	this.clearAll("textholder");
 },
 
 clearAll: function( identifier )
 {
-	var elems = $(identifier);
+	var elems = window.document.getElementsByClassName(identifier)
 	for(var i = 0; i<elems.length; i++)
 		elems[i].innerHTML="";
 },
@@ -38,19 +38,5 @@ validateFields: function()
 		model.level(50);
 	if( isNaN( level ) )
 		model.level( 30 );
-},
-
-makeChartBar: function( detailmessage, pixelheight, distanceleft, color, opacity)
-{
-	return "<a title=\""+detailmessage+"\"><div style=\"height:"+ pixelheight +"px;left:"+ distanceleft+"px;opacity:"+opacity+";background-color:"+color+"\"></div></a>";
-},
-
-
-setForSelect: function( id, value )
-{
-	for (var i=0;i< $(id)[0].options.length;i++)
-		if ($(id)[0].options[i].value === value)
-			$(id)[0].options[i].selected = true;
 }
-
 }; };
