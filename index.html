@@ -1,124 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Minecraft Enchantment Simulator v1.7.5</title>
+<title>Minecraft Enchantment Simulator v1.8</title>
 
 <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="js/knockout.debug.js"></script>
 <script type="text/javascript" src="js/storage.js"></script>
 <script type="text/javascript" src="js/iterator.js"></script>
 <script type="text/javascript" src="js/tools.js"></script>
 <script type="text/javascript" src="js/collection.js"></script>
 <script type="text/javascript" src="js/enchantments.js"></script>
+<script type="text/javascript" src="js/viewmodel.js"></script>
 <script type="text/javascript" src="js/page.js"></script>
-<script type="text/javascript" src="js/chart.js"></script>
 <script type="text/javascript" src="js/mc.js"></script>
+<script type="text/javascript" src="js/chart.js"></script>
+<script type="text/javascript" src="js/simulation.js"></script>
 
 <script type="text/javascript">
-var _storage = makeStorage();
+var _model = makeViewModel();
+var _storage = makeStorage( _model );
 var _tools = makeTools();
-var _page = makePage( _storage, _tools );
+var _page = makePage( _storage, _tools, _model );
 
 $(document).ready(function()
 {
-	$("#add").click( function(){ _page.addLevel(); simulate(); } );
-	$("#remove").click( function(){ _page.removeLevel(); simulate(); } );
-	$("#runagain").click( function(){ simulate() });
-	_page.setInitialValues();
-	simulate();
+	_storage.getData(_model);
+	var sim = makeSim(_page,_tools, _model );
+	_model.run = sim;
+	ko.applyBindings( _model );
+	_model.setOnChanged( sim );
 });
-
-function simulate()
-{
-	_page.clear();
-
-	var statsSimulateEnchantment = makeGroupedCollection( _tools );
-	var statsEnchantmentCount = makeCollection( _tools );
-	var totalEnchantments = 0;
-	var misses = 0;
-
-	var calculateStdDev = function()
-	{
-		statsEnchantmentCount.updateSum();
-		statsSimulateEnchantment.updateSum();
-	};
-
-	var collecthelper = function( result )
-	{
-		statsSimulateEnchantment.report( result.enchantment.id, result.enchantmentLevel );
-	};
-
-	var collectStats = function( result )
-	{
-		totalEnchantments += result.length;
-		if( result.length === 0 )
-			misses++;
-		statsEnchantmentCount.report(result.length);
-		_tools.foreach( result, collecthelper )
-	};
-
-	var it = makeIterator( simulateEnchantments, collectStats );
-
-	var iterate = function( data )
-	{
-		it.run( data.iterations, data );
-	};
-
-	var sim = makeIterator( iterate, calculateStdDev );
-
-
-
-	var data = _page.getInputData();
-
-	var baseLevel = getBaseEnchantmentLevel( data.itemId, data.materialId );
-
-	_page.write("");
-	_page.write( "Base enchantment level for tool: " + baseLevel );
-
-	if( baseLevel <= 0 )
-	{
-		_page.write( "Not enchantable!" );
-		return;
-	}
-
-	_page.write( "Simulating enchanting "
-		+ data.material + " "
-		+ data.item + " " 
-		+ data.iterations + " times over " 
-		+ data.simulations +" series." );
-
-	sim.run( data.simulations, data );
-
-	_page.write( "Done, presenting data..." );
-	if(misses > 0 )
-		_page.write ("Missed enchanting " + misses + " times.");
-	
-	_page.write( "Enchantment count saturation: " + totalEnchantments / (data.simulations*data.iterations) );
-
-	var writeNInfo = function( p,s,label )
-	{
-		return label + " enchantments: " + _tools.wrapPercent(p,s);
-	};
-
-	var nWriter = makeChart( 240, 23, "#num", "white", writeNInfo, data.iterations, data.showstdev, _page );
-
-	statsEnchantmentCount.foreach( nWriter.drawNext );
-
-	_page.write();
-
-	var writeCInfo = function(enchantment,p,s,level)
-	{
-		return enchantment.name + " " + level + ": " + _tools.wrapPercent( p, s );
-	};
-
-	var drawController = makeDrawController( 240, 23, "#sim", writeCInfo, data.iterations, data.showstdev, _page,
-		function( enchantment, p )
-		{
-			_page.write("Total prob. for " + enchantment.name + ": " + Math.floor(p*100) + "%" );
-		} );
-
-	statsSimulateEnchantment.foreach( drawController );
-}
-
 </script>
 <style type="text/css">
 body
@@ -153,13 +64,13 @@ body
 <div class="container">
 	<div class="row">
 		<div class="span3">
-			<form class="well form-inline" action="#">
+			<form class="well form-inline">
 				<fieldset>
 					<legend>Select input</legend>
 					<div class="control-group">
 						<label class="control-label">Material</label>
 						<div class="controls">
-							<select id="material" class="span2"  onchange="simulate()">
+							<select id="material" class="span2" data-bind="value:material">
 								<option value="diamond">Diamond</option>
 								<option value="iron">Iron</option>
 								<option value="gold">Gold</option>
@@ -173,7 +84,7 @@ body
 					<div class="control-group">
 						<label class="control-label">Item</label>
 						<div class="controls">
-							<select id="item" class="span2" onchange="simulate()">
+							<select id="item" class="span2" data-bind="value:item">
 								<option value="pickaxe">Pickaxe</option>
 								<option value="sword">Sword</option>
 								<option value="axe">Axe</option>
@@ -189,53 +100,46 @@ body
 					<div class="control-group">
 						<label class="control-label">Level</label>
 						<div class="controls">
-							<input value="30" id="level" class="span1" onchange="simulate()" />
-							<button class="btn" id="add">+</button>
-							<button class="btn" id="remove">-</button>
+							<input value="30" id="level" class="span1" data-bind="value:level" />
+							<button class="btn" id="add" data-bind="click:addLevel">+</button>
+							<button class="btn" id="remove" data-bind="click:removeLevel">-</button>
 						</div>
 					</div>
 					<div class="control-group">
 						<label class="control-label">Simulations</label>
 						<div class="controls">
-							<input id="trials" class="span2" onchange="simulate()" />
+							<input id="iterations" class="span1" data-bind="value:iterations" />
+							<input id="simulations" class="span1" data-bind="value:simulations" />
 						</div>
 					</div>
 
 					<div class="control-group">
 						<div class="controls">
 							<label class="checkbox">
-								<input type="checkbox" id="stdev" onchange="simulate()">
+								<input type="checkbox" id="stdev" data-bind="checked:stdev"/>
 								Show confidence intervals
 							</label>
 						</div>
 					</div>
-
 					<div class="form-actions">
-						<button id="runagain" class="btn btn-info">Run again</button>
+						<button id="runagain" class="btn btn-info" data-bind="click:run">Run again</button>
 					</div>
 				</fieldset>
 			</form>
 		</div>
-		<div class="span5">
+		<div class="span5" data-bind="foreach:displayedCharts">
 			<div class="row">
-				<div class="chartholder span5" id="sim"></div>
-			</div>
-			<div class="row"><div class="span5"><p>&nbsp;</p></div></div>
-			<div class="row">
-				<div class="span5">
-					<p>Probability that enchantment will be included</p>
+				<div class="chartholder span5" data-bind="foreach:bars">
+					<div data-bind="style:{left:distanceleft+'px'}, text:label" style="height:1em;bottom:-2em;margin:0.5em;padding:0.3em;border:none"></div>
+					<a data-bind="attr: { title:detailmessage } ">
+						<div data-bind="style:{ height: (pixelheight+stdev)+'px', left:distanceleft+'px', backgroundColor:color }" style="opacity:0.5"></div>
+						<div data-bind="style:{ height: pixelheight+'px', left:distanceleft+'px', backgroundColor:color }" style="opacity:0.7"></div>
+						<div data-bind="style:{ height: (pixelheight-stdev)+'px', left:distanceleft+'px', backgroundColor:color }"></div>
+					</a>
 				</div>
 			</div>
-			<div class="row"><div class="span5"><p>&nbsp;</p></div></div>
-			<div class="row"><div class="span5"><p>&nbsp;</p></div></div>
-			<div class="row">
-				<div class="chartholder span5" id="num"></div>
-			</div>
-			<div class="row"><div class="span5"><p>&nbsp;</p></div></div>
-			<div class="row">
-				<div class="span5">
-					<p>Probability to get N enchantments</p>
-				</div>
+			<div class="row" style="margin-top:1em;margin-bottom:2em">
+				<div class="span5" data-bind="text:title"></div>
 			</div>
 		</div>
 		<div class="span3">

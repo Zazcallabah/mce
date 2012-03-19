@@ -1,19 +1,30 @@
-var makeChart = function( height, width, divid, color, makeInfo, iterations, detailed, page, existingcolumns )
+
+var makeBar = function(color,message,label,pxHeight,stdev,distanceleft)
+{
+	var bar = {};
+	bar.color = color;
+	bar.detailmessage=message;
+	bar.label = label;
+	bar.pixelheight = pxHeight;
+	bar.stdev = stdev;
+	bar.distanceleft = distanceleft;
+	bar.opacity = 0.5;
+	return bar;
+};
+
+var makeBarGroup = function( height, width, color, makeInfo, iterations, detailed, page, existingcolumns, chart )
 {
 	var columncount = existingcolumns || 0;
-	return {
+	var bargroup = {
 		drawNext: function( statEntry, label )
 		{
-			page.writeChartBarWithStdev(
-				statEntry,
-				iterations,
-				divid,
-				height,
-				width*columncount + 1,
-				{label:label,color:color},
-				function(p,s){ return makeInfo(p,s,label); },
-				detailed
-				);
+			var percent = statEntry.mean / iterations;
+			var stdev = Math.sqrt( statEntry.variance ) / iterations;
+
+			var info = makeInfo( percent, stdev, label );
+			var mean = height * percent;
+			chart.addBar( makeBar(color,info,label,mean,stdev, width*columncount + 1));
+			page.write( info);
 			columncount += 1;
 		},
 
@@ -22,9 +33,20 @@ var makeChart = function( height, width, divid, color, makeInfo, iterations, det
 			return columncount;
 		}
 	};
+	return bargroup;
 };
 
-var makeDrawController = function( height, width, divid, makeInfo, iterations, detailed, page, reportBack )
+var makeChart = function(title){
+	var chart={};
+	chart.bars = ko.observableArray([makeBar(),makeBar()]);
+	chart.title = ko.observable(title);
+	chart.addBar= function( bar ){
+		bars.push( bar );
+	};
+	return chart;
+};
+
+var makeDrawController = function( height, width, makeInfo, iterations, detailed, page, reportBack, chart )
 {
 	var currentEnchantment = undefined;
 	var probabilitySum = 0;
@@ -36,10 +58,9 @@ var makeDrawController = function( height, width, divid, makeInfo, iterations, d
 		{
 			currentEnchantment = _enchantments[position];
 			probabilitySum = 0;
-			maker = makeChart(
+			maker = makeBarGroup(
 				height,
 				width,
-				divid,
 				currentEnchantment.color,
 				function(p,s,label)
 				{
@@ -49,7 +70,9 @@ var makeDrawController = function( height, width, divid, makeInfo, iterations, d
 				iterations,
 				detailed,
 				page,
-				maker.currentColumnCount() );
+				maker.currentColumnCount(),
+				chart
+			);
 		},
 		callback: function( stats, label ){ maker.drawNext(stats,label); },
 		after: function() { reportBack( currentEnchantment, probabilitySum ); }

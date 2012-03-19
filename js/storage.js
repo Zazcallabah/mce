@@ -1,5 +1,30 @@
-var makeStorage = function() {
+var makeStorage = function(tools) {
 	var dataLabel = "mce_data_932";
+
+	var mapModelToData = function(model)
+	{
+		return {
+			material: model.material(),
+			item: model.item(),
+			level: model.level(),
+			materialId: model.getMaterialId(model.material()),
+			itemId: model.getItemId(model.item()),
+			iterations: model.iterations(),
+			simulations: model.simulations(),
+			showstdev: model.stdev()
+		};
+	};
+
+	var mapDataToModel = function(model,data)
+	{
+		model.material(data.material);
+		model.item(data.item);
+		model.level(data.level);
+		model.iterations(data.iterations);
+		model.simulations(data.simulations);
+		model.stdev( data.showstdev );
+	};
+
 	return {
 getDefault: function()
 {
@@ -15,8 +40,9 @@ getDefault: function()
 	};
 },
 
-saveData: function( data )
+saveData: function( model )
 {
+	var data = mapModelToData(model);
 	var jsonData = JSON.stringify( data );
 	if( typeof(localStorage) !== undefined )
 	{
@@ -24,22 +50,20 @@ saveData: function( data )
 	}
 },
 
-getData: function()
+getData: function( model )
 {
+	var data = this.getDefault();
 	if( typeof(localStorage) !== undefined )
 	{
 		var storedData = localStorage.getItem( dataLabel );
 		if( storedData === null || storedData === undefined )
 		{
-			storedData = this.getDefault();
-			this.saveData( storedData );
-			return storedData;
+			this.saveData( data );
 		}
 		else
-			return JSON.parse( storedData );
+			data = storedData;
 	}
-	else
-		return this.getDefault();
+	mapDataToModel(model,data);
 }
 
 }; };
