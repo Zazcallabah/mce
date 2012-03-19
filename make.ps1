@@ -23,15 +23,14 @@ function ReplaceWithCss( $str, $name ) {
 }
 rm mce.html
 gc index.html | Foreach-Object{
-$one = ReplaceWithFile $_ "js/storage.js"
-$two = ReplaceWithFile $one "js/enchantments.js"
-$three = ReplaceWithFile $two "js/page.js"
-$four = ReplaceWithFile $three "js/mc.js"
-$five = ReplaceWithFile $four "js/iterator.js"
-$six = ReplaceWithFile $five "js/tools.js"
-$seven = ReplaceWithFile $six "js/collection.js"
-$eight = ReplaceWithFile $seven "js/chart.js"
-$nine = ReplaceWithFile $eight "js/jquery-1.7.1.min.js"
+$one = ReplaceWithFile $_ "js/knockout.js"
+$two = ReplaceWithFile $one "js/storage.js"
+$three = ReplaceWithFile $two "js/tools.js"
+$four = ReplaceWithFile $three "js/enchantments.js"
+$five = ReplaceWithFile $four "js/viewmodel.js"
+$six = ReplaceWithFile $five "js/page.js"
+$seven = ReplaceWithFile $six "js/mc.js"
+$nine = ReplaceWithFile $seven "js/simulation.js"
 $ten = ReplaceWithCss $nine "css/bootstrap.min.css"
 add-content mce.html $ten
 }
