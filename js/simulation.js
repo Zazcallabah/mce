@@ -41,17 +41,6 @@ var makeSim = function(page,tools,model){
 		var itemname,materialname;
 		tools.foreach( model.availableItems(), function(item){if( item.value === model.item() ) itemname = item.name; });
 		tools.foreach( model.availableMaterials(), function(mat){if( mat.value === model.material() ) materialname = mat.name; });
-		var baseLevel = getBaseEnchantmentLevel( model.item(), model.material() );
-
-		page.write("");
-		page.write( "Base enchantment level for tool: " + baseLevel );
-
-		if( baseLevel <= 0 )
-		{
-			page.write( "Not enchantable!" );
-			model.addChart(makeChart());
-			return;
-		}
 
 		page.write( "Simulating enchanting "
 			+ materialname + " "
@@ -98,7 +87,7 @@ var makeSim = function(page,tools,model){
 		var ench = _enchantments[model.enchantment()];
 		var chart = makeChart("Probability by level");
 		model.addChart(chart);
-		var writer = makeBarGroup( 240,18,ench.color,function(p,s,l){return l+": "+tools.wrapPercent(p,s)},model.iterations(),model.stdev(),page,chart,1 );
+		var writer = makeBarGroup( 240,16,ench.color,function(p,s,l){if(isNaN(p))return "";return l+": "+tools.wrapPercent(p,s)},model.iterations(),model.stdev(),page,chart,1 );
 		for(var l = from; l<= to;l++)
 		{
 			var collection = makeGroupedCollection(tools);
@@ -113,6 +102,17 @@ var makeSim = function(page,tools,model){
 		page.clear();
 		page.validateFields();
 		_storage.saveData(model);
+		var baseLevel = getBaseEnchantmentLevel( model.item(), model.material() );
+
+		page.write("");
+		page.write( "Base enchantment level for tool: " + baseLevel );
+
+		if( baseLevel <= 0 )
+		{
+			page.write( "Not enchantable!" );
+			model.addChart(makeChart());
+			return;
+		}
 
 		if( model.mode() === "level" )
 		{
@@ -140,7 +140,8 @@ var makeBarGroup = function( height, width, color, makeInfo, iterations, detaile
 			var mean = height * percent;
 			var lower = height * (percent - stdev );
 			chart.addBar( makeBar(color,info,label,upper,mean,lower,stdev, width*columncount + 1,detailed,width-3));
-			page.write( info);
+			if( info !== "" )
+				page.write( info);
 			columncount += 1;
 		},
 
