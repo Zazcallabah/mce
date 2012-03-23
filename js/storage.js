@@ -45,7 +45,7 @@ setDefault: function( model )
 		levelIterations: 50,
 		levelSimulations: 10,
 		showstdev: false,
-		mode: "level",
+		mode: "enchantment",
 		enchantment:0,
 		power:1
 	});
