@@ -61,7 +61,6 @@ var makeSim = function(page,tools,model){
 			return label + " enchantments: " + tools.wrapPercent(p,s);
 		};
 
-
 		var writeCInfo = function(enchantment,p,s,level)
 		{
 			return enchantment.name + " " + level + ": " + _tools.wrapPercent( p, s );
@@ -71,7 +70,7 @@ var makeSim = function(page,tools,model){
 		var drawController = makeDrawController( 240, 23, writeCInfo, model.iterations(), model.stdev(), page,
 			function( enchantment, p )
 			{
-				page.write("Total prob. for " + enchantment.name + ": " + Math.floor(p*100) + "%" );
+				page.write("Total prob. for " + enchantment.name + ": " + Math.floor(p*1000)/10+ "%" );
 			},
 		eChart);
 
