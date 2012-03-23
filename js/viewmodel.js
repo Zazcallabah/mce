@@ -27,6 +27,8 @@ var makeViewModel = function()
 	model.level = ko.observable(null);
 	model.simulations = ko.observable(null);
 	model.iterations = ko.observable(null);
+	model.levelSimulations = ko.observable(null);
+	model.levelIterations = ko.observable(null);
 	model.stdev = ko.observable(null);
 	model.availableEnchantments = ko.computed(function(){
 		var avail = [];
@@ -80,6 +82,8 @@ var makeViewModel = function()
 		model.power.subscribe(action);
 		model.enchantment.subscribe(action);
 	};
+	model.run = function(){};
+	model.reset = function(){};
 	return model;
 };
 

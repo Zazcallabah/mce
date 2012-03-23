@@ -9,6 +9,8 @@ var makeStorage = function() {
 			level: model.level(),
 			iterations: model.iterations(),
 			simulations: model.simulations(),
+			levelIterations: model.levelIterations(),
+			levelSimulations: model.levelSimulations(),
 			showstdev: model.stdev(),
 			mode: model.mode(),
 			enchantment: model.enchantment(),
@@ -23,6 +25,8 @@ var makeStorage = function() {
 		model.level(data.level);
 		model.iterations(data.iterations);
 		model.simulations(data.simulations);
+		model.levelIterations(data.levelIterations);
+		model.levelSimulations(data.levelSimulations);
 		model.stdev( data.showstdev );
 		model.mode( data.mode );
 		model.enchantment( data.enchantment );
@@ -38,6 +42,8 @@ setDefault: function( model )
 		level: 30,
 		iterations: 200,
 		simulations: 25,
+		levelIterations: 50,
+		levelSimulations: 10,
 		showstdev: false,
 		mode: "level",
 		enchantment:0,

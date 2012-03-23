@@ -50,79 +50,91 @@ body
 </div>
 <div class="container">
 	<div class="row">
-		<div class="span3">
-			<form class="well form-inline">
-				<fieldset>
-					<legend>Select input</legend>
-					<div class="control-group">
-						<label class="control-label">Material</label>
-						<div class="controls">
-							<select class="span2" data-bind="options: availableMaterials, optionsText: 'name',optionsValue:'value', value: material"></select>
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label">Item</label>
-						<div class="controls">
-							<select class="span2" data-bind="options:availableItems,optionsText:'name',optionsValue:'value',value:item"></select>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="controls">
-							<label class="radio">
-								<input type="radio" name="mode" value="enchantment" data-bind="checked:mode">
-								Graph enchantments
-							</label><br/>
-							<label class="radio">
-								<input type="radio" name="mode" value="level" data-bind="checked:mode">
-								Graph levels
-							</label>
-						</div>
-					</div>
-					<div class="control-group" data-bind="visible:levelMode">
-						<label class="control-label" >Enchantment</label>
-						<div class="controls">
-							<select class="span2" data-bind="options: availableEnchantments, optionsText: 'name',optionsValue:'id', value: enchantment"></select>
-						</div>
-					</div>
-					<div class="control-group" data-bind="visible:levelMode">
-						<label class="control-label" >Power</label>
-						<div class="controls">
-							<select class="span2" data-bind="options: availablePowers, value: power"></select>
-						</div>
-					</div>
-					<div class="control-group" data-bind="visible:enchantmentMode">
-						<label class="control-label">Level</label>
-						<div class="controls">
-							<input value="30" id="level" class="span1" data-bind="value:level" />
-							<button class="btn" id="add" data-bind="click:addLevel">+</button>
-							<button class="btn" id="remove" data-bind="click:removeLevel">-</button>
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label">Simulations</label>
-						<div class="controls">
-							<input id="iterations" class="span1" data-bind="value:iterations" />
-							<input id="simulations" class="span1" data-bind="value:simulations" />
-						</div>
-					</div>
-
-					<div class="control-group">
-						<div class="controls">
-							<label class="checkbox">
-								<input type="checkbox" id="stdev" data-bind="checked:stdev"/>
-								Show confidence intervals
-							</label>
-						</div>
-					</div>
-					<div class="form-actions">
-						<button id="runagain" class="btn btn-info" data-bind="click:run">Run again</button>
-					</div>
-				</fieldset>
-			</form>
-		</div>
-		<div class="span5" data-bind="foreach:displayedCharts">
+		<div class="span4">
 			<div class="row">
-				<div class="chartholder span5" data-bind="foreach:bars">
+				<form class="well form-inline">
+					<fieldset>
+						<legend>Select input</legend>
+						<div class="control-group">
+							<label class="control-label">Material</label>
+							<div class="controls">
+								<select class="span2" data-bind="options: availableMaterials, optionsText: 'name',optionsValue:'value', value: material"></select>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">Item</label>
+							<div class="controls">
+								<select class="span2" data-bind="options:availableItems,optionsText:'name',optionsValue:'value',value:item"></select>
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="controls">
+								<label class="radio">
+									<input type="radio" name="mode" value="enchantment" data-bind="checked:mode">
+									Graph enchantments
+								</label><br/>
+								<label class="radio">
+									<input type="radio" name="mode" value="level" data-bind="checked:mode">
+									Graph levels
+								</label>
+							</div>
+						</div>
+						<div class="control-group" data-bind="visible:levelMode">
+							<label class="control-label" >Enchantment</label>
+							<div class="controls">
+								<select class="span2" data-bind="options: availableEnchantments, optionsText: 'name',optionsValue:'id', value: enchantment"></select>
+							</div>
+						</div>
+						<div class="control-group" data-bind="visible:levelMode">
+							<label class="control-label" >Power</label>
+							<div class="controls">
+								<select class="span2" data-bind="options: availablePowers, value: power"></select>
+							</div>
+						</div>
+						<div class="control-group" data-bind="visible:enchantmentMode">
+							<label class="control-label">Level</label>
+							<div class="controls">
+								<input value="30" id="level" class="span1" data-bind="value:level" />
+								<button class="btn" id="add" data-bind="click:addLevel">+</button>
+								<button class="btn" id="remove" data-bind="click:removeLevel">-</button>
+							</div>
+						</div>
+						<div class="control-group" data-bind="visible:levelMode">
+							<label class="control-label">Simulations</label>
+							<div class="controls">
+								<input id="aeu99" class="span1" data-bind="value:levelIterations" />
+								<input id="tmp2" class="span1" data-bind="value:levelSimulations" />
+							</div>
+						</div>
+						<div class="control-group" data-bind="visible:enchantmentMode">
+							<label class="control-label">Simulations</label>
+							<div class="controls">
+								<input id="lol" class="span1" data-bind="value:iterations" />
+								<input id="aoeu" class="span1" data-bind="value:simulations" />
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="controls">
+								<label class="checkbox">
+									<input type="checkbox" id="stdev" data-bind="checked:stdev"/>
+									Show confidence intervals
+								</label>
+							</div>
+						</div>
+						<div class="form-actions">
+							<button class="btn btn-info" data-bind="click:run">Run again</button>
+							<button class="btn btn-danger" data-bind="click:reset">Reset</button>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div class="row">
+				<pre id="output" class="textholder"></pre>
+			</div>
+		</div>
+		<div class="span8" data-bind="foreach:displayedCharts">
+			<div class="row">
+				<div class="chartholder span8" data-bind="foreach:bars">
 					<div data-bind="style:{left:distanceleft,width:width}, text:label" style="bottom:-1.5em;border:none;text-align:center;"></div>
 					<a data-bind="attr: { title:detailmessage } ">
 						<div data-bind="style:{ height: upperstdev, left:distanceleft, width:width, backgroundColor:color},visible:showstdev" style="opacity:0.5"></div>
@@ -134,9 +146,6 @@ body
 			<div class="row" style="margin-top:1.5em;margin-bottom:2em">
 				<div class="span5" data-bind="text:title"></div>
 			</div>
-		</div>
-		<div class="span3">
-			<pre id="output" class="textholder"></pre>
 		</div>
 	</div>
 	<hr/>
@@ -152,6 +161,11 @@ body
 	_storage.getData(_model);
 	var sim = makeSim(_page,_tools, _model );
 	_model.run = sim;
+	_model.reset = function()
+	{
+		_storage.setDefault(_model);
+		_storage.saveData(_model);
+	};
 	ko.applyBindings( _model );
 	_model.setOnChanged( sim );
 	sim();

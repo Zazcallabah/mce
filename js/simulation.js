@@ -1,7 +1,18 @@
 var makeSim = function(page,tools,model){
 
+
+
 	var simulate = function(gc,c,level)
 	{
+		var iterations = model.iterations();
+		var simulations = model.simulations();
+
+		if( model.mode() === "level" )
+		{
+			iterations = model.levelIterations();
+			simulations = model.levelSimulations();
+		}
+
 		var total=0,misses=0;
 		var collecthelper = function( result )
 		{
@@ -27,10 +38,10 @@ var makeSim = function(page,tools,model){
 
 		var iterate = function()
 		{
-			it.run( model.iterations(), model );
+			it.run( iterations, model );
 		};
 		var sim = makeIterator( iterate, calculateStdDev );
-		sim.run( model.simulations(), model );
+		sim.run( simulations, model );
 		return {total:total,misses:misses};
 	};
 
@@ -54,7 +65,7 @@ var makeSim = function(page,tools,model){
 		if(sim_result.misses > 0 )
 			page.write ("Missed enchanting " + sim_result.misses + " times.");
 
-		page.write( "Enchantment count saturation: " + sim_result.total / (model.simulations()*model.iterations()) );
+		page.write( "Enchantment count saturation: " + sim_result.total / (model.iterations()*model.simulations()) );
 
 		var writeNInfo = function( p,s,label )
 		{
@@ -86,7 +97,8 @@ var makeSim = function(page,tools,model){
 		var ench = _enchantments[model.enchantment()];
 		var chart = makeChart("Probability by level");
 		model.addChart(chart);
-		var writer = makeBarGroup( 240,16,ench.color,function(p,s,l){if(isNaN(p))return "";return l+": "+tools.wrapPercent(p,s)},model.iterations(),model.stdev(),page,chart,1 );
+		var writer = makeBarGroup( 240,16,ench.color,function(p,s,l){
+			if(isNaN(p))return "";return l+": "+tools.wrapPercent(p,s)},model.levelIterations(),model.stdev(),page,chart,1 );
 		for(var l = from; l<= to;l++)
 		{
 			var collection = makeGroupedCollection(tools);
