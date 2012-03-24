@@ -1,11 +1,24 @@
 var makeTools = function () { return {
 
-foreach: function( list, callback )
+foreach: function( list, callback, order )
 {
-	for( var item in list )
+	function keys(obj)
 	{
-		if( list.hasOwnProperty( item ) )
-			callback( list[item], item );
+		var keys = [];
+		for(var key in obj)
+		{
+			keys.push(key);
+		}
+		return keys;
+	}
+
+	var sortedproperties = keys(list).sort();
+	for( var i = 0; i<sortedproperties.length;i++ )
+	{
+		var propname = sortedproperties[i];
+
+		if( list.hasOwnProperty( propname ) )
+			callback( list[propname], propname );
 	}
 },
 
