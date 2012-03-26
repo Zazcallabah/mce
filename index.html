@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Minecraft Enchantment Simulator v1.8</title>
+<title>Minecraft Enchantment Simulator v1.8.1</title>
 
 <script type="text/javascript" src="js/knockout.js"></script>
 <script type="text/javascript" src="js/storage.js"></script>
@@ -12,12 +12,6 @@
 <script type="text/javascript" src="js/mc.js"></script>
 <script type="text/javascript" src="js/simulation.js"></script>
 
-<script type="text/javascript">
-var _model = makeViewModel();
-var _storage = makeStorage();
-var _tools = makeTools();
-var _page = makePage( _storage, _tools, _model );
-</script>
 <style type="text/css">
 body
 {
@@ -94,29 +88,29 @@ body
 						<div class="control-group" data-bind="visible:enchantmentMode">
 							<label class="control-label">Level</label>
 							<div class="controls">
-								<input value="30" id="level" class="span1" data-bind="value:level" />
-								<button class="btn" id="add" data-bind="click:addLevel">+</button>
-								<button class="btn" id="remove" data-bind="click:removeLevel">-</button>
+								<input value="30" class="span1" data-bind="value:level" />
+								<button class="btn" data-bind="click:addLevel">+</button>
+								<button class="btn" data-bind="click:removeLevel">-</button>
 							</div>
 						</div>
 						<div class="control-group" data-bind="visible:levelMode">
 							<label class="control-label">Simulations</label>
 							<div class="controls">
-								<input id="aeu99" class="span1" data-bind="value:levelIterations" />
-								<input id="tmp2" class="span1" data-bind="value:levelSimulations" />
+								<input class="span1" data-bind="value:levelIterations" />
+								<input class="span1" data-bind="value:levelSimulations" />
 							</div>
 						</div>
 						<div class="control-group" data-bind="visible:enchantmentMode">
 							<label class="control-label">Simulations</label>
 							<div class="controls">
-								<input id="lol" class="span1" data-bind="value:iterations" />
-								<input id="aoeu" class="span1" data-bind="value:simulations" />
+								<input class="span1" data-bind="value:iterations" />
+								<input class="span1" data-bind="value:simulations" />
 							</div>
 						</div>
 						<div class="control-group">
 							<div class="controls">
 								<label class="checkbox">
-									<input type="checkbox" id="stdev" data-bind="checked:stdev"/>
+									<input type="checkbox" data-bind="checked:stdev"/>
 									Show confidence intervals
 								</label>
 							</div>
@@ -158,6 +152,10 @@ body
 	</footer>
 </div>
 <script type="text/javascript">
+	var _model = makeViewModel();
+	var _storage = makeStorage();
+	var _tools = makeTools();
+	var _page = makePage( _storage, _tools, _model );
 	_storage.getData(_model);
 	var sim = makeSim(_page,_tools, _model );
 	_model.run = sim;

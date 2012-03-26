@@ -78,6 +78,8 @@ var makeViewModel = function()
 		model.item.subscribe(action);
 		model.simulations.subscribe(action);
 		model.iterations.subscribe(action);
+		model.levelSimulations.subscribe(action);
+		model.levelIterations.subscribe(action);
 		model.mode.subscribe(action);
 		model.power.subscribe(action);
 		model.enchantment.subscribe(action);
