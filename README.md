@@ -42,7 +42,7 @@ This is mainly the bar charts in text form for usability purposes.
 
 
 ##Are these values correct?
-I think so. If you want to help check for bugs, the minecraft enchantment algorithms are located in js/mc.js and the enchantment date is stored in js/enchantments.js. The statistics are calculated using the updateSum method in tools.js. Those would probably be good places to start checking out.
+I think so. If you want to help check for bugs, the minecraft enchantment algorithms are located in js/mc.js and the enchantment data is stored in js/enchantments.js. The statistics are calculated using the updateSum method in js/tools.js. Those would probably be good places to start checking out.
 
 
 
