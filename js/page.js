@@ -22,7 +22,7 @@ clear: function()
 clearAll: function( identifier )
 {
 	var elems = window.document.getElementsByClassName(identifier)
-	for(var i = elems.length; i; i--)
+	for(var i = 0; i = elems.length; i++)
 		elems[i].innerHTML="";
 },
 
