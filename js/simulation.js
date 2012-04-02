@@ -134,17 +134,17 @@ var makeSim = function(page,tools,model){
 
 var makeBarGroup = function( height, width, color, makeInfo, iterations, detailed, page, chart, existingcolumns )
 {
-	var columncount = existingcolumns || 0,
-	return {
+	var columncount = existingcolumns || 0;
+	var bargroup = {
 		drawNext: function( statEntry, label )
 		{
-			var percent = statEntry.mean / iterations,
-				stdev = Math.sqrt( statEntry.variance ) / iterations,
+			var percent = statEntry.mean / iterations;
+			var stdev = Math.sqrt( statEntry.variance ) / iterations;
 
-				info = makeInfo( percent, stdev, label ),
-				upper = height * (percent + stdev ),
-				mean = height * percent,
-				lower = height * (percent - stdev ),
+			var info = makeInfo( percent, stdev, label );
+			var upper = height * (percent + stdev );
+			var mean = height * percent;
+			var lower = height * (percent - stdev );
 			chart.addBar( makeBar(color,info,label,upper,mean,lower,stdev, width*columncount + 1,detailed,width-3));
 			if( info !== "" )
 				page.write( info);
@@ -156,6 +156,7 @@ var makeBarGroup = function( height, width, color, makeInfo, iterations, detaile
 			return columncount;
 		}
 	};
+	return bargroup;
 };
 var makeDrawController = function( height, width, makeInfo, iterations, detailed, page, reportBack, chart )
 {
