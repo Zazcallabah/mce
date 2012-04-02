@@ -4,52 +4,45 @@ var makeSim = function(page,tools,model){
 
 	var simulate = function(gc,c,level)
 	{
-		var iterations = model.iterations();
-		var simulations = model.simulations();
-
-		if( model.mode() === "level" )
-		{
-			iterations = model.levelIterations();
-			simulations = model.levelSimulations();
-		}
-
-		var total=0,misses=0;
-		var collecthelper = function( result )
-		{
-			gc.report( result.enchantment.id, result.enchantmentLevel );
-		};
-
-		var collectStats = function( result )
-		{
-			total += result.length;
-			if( result.length === 0 )
-				misses++;
-			if( c!== undefined )
-				c.report(result.length);
-			tools.foreach( result, collecthelper )
-		};
-		var calculateStdDev = function()
-		{
-			if(c!==undefined)
-				c.updateSum();
-			gc.updateSum();
-		};
-		var it = makeIterator( simulateEnchantments, collectStats, level || model.level() );
-
-		var iterate = function()
-		{
-			it.run( iterations, model );
-		};
-		var sim = makeIterator( iterate, calculateStdDev );
+		var iterations = ( model.mode() === "level" ) ? model.levelIterations() : model.iterations(),
+			simulations = ( model.mode() === "level" ) ? model.levelSimulations() : model.simulations(),
+			total=0,
+			misses=0,
+			collecthelper = function( result )
+			{
+				gc.report( result.enchantment.id, result.enchantmentLevel );
+			},
+			collectStats = function( result )
+			{
+				total += result.length;
+				if( result.length === 0 )
+					misses++;
+				if( c!== undefined )
+					c.report(result.length);
+				tools.foreach( result, collecthelper )
+			},
+			calculateStdDev = function()
+			{
+				if(c!==undefined)
+					c.updateSum();
+				gc.updateSum();
+			},
+			it = makeIterator( simulateEnchantments, collectStats, level || model.level() ),
+			iterate = function()
+			{
+				it.run( iterations, model );
+			},
+			sim = makeIterator( iterate, calculateStdDev );
 		sim.run( simulations, model );
 		return {total:total,misses:misses};
-	};
+	},
 
-	var byEnchantment = function()
+	byEnchantment = function()
 	{
-		var statsSimulateEnchantment = makeGroupedCollection( tools );
-		var statsEnchantmentCount = makeCollection( tools );
-		var itemname,materialname;
+		var statsSimulateEnchantment = makeGroupedCollection( tools ),
+			statsEnchantmentCount = makeCollection( tools ),
+			itemname,
+			materialname;
 		tools.foreach( model.availableItems(), function(item){if( item.value === model.item() ) itemname = item.name; });
 		tools.foreach( model.availableMaterials(), function(mat){if( mat.value === model.material() ) materialname = mat.name; });
 
@@ -68,15 +61,14 @@ var makeSim = function(page,tools,model){
 		page.write( "Enchantment count saturation: " + sim_result.total / (model.iterations()*model.simulations()) );
 
 		var writeNInfo = function( p,s,label )
-		{
-			return label + " enchantments: " + tools.wrapPercent(p,s);
-		};
-
-		var writeCInfo = function(enchantment,p,s,level)
-		{
-			return enchantment.name + " " + level + ": " + _tools.wrapPercent( p, s );
-		};
-		var eChart = makeChart("Probability that enchantment will be included");
+				{
+					return label + " enchantments: " + tools.wrapPercent(p,s);
+				},
+			writeCInfo = function(enchantment,p,s,level)
+				{
+					return enchantment.name + " " + level + ": " + _tools.wrapPercent( p, s );
+				},
+			eChart = makeChart("Probability that enchantment will be included");
 		model.addChart(eChart);
 		var drawController = makeDrawController( 240, 23, writeCInfo, model.iterations(), model.stdev(), page,
 			function( enchantment, p )
@@ -91,14 +83,17 @@ var makeSim = function(page,tools,model){
 		model.addChart(nChart);
 		var nWriter = makeBarGroup( 240, 23, "white", writeNInfo, model.iterations(), model.stdev(), page, nChart );
 		statsEnchantmentCount.foreach( nWriter.drawNext );
-	};
+	},
 
-	var byLevel = function(from,to){
-		var ench = _enchantments[model.enchantment()];
-		var chart = makeChart("Probability by level");
+	byLevel = function(from,to){
+		var ench = _enchantments[model.enchantment()],
+			chart = makeChart("Probability by level");
 		model.addChart(chart);
 		var writer = makeBarGroup( 240,16,ench.color,function(p,s,l){
-			if(isNaN(p))return "";return l+": "+tools.wrapPercent(p,s)},model.levelIterations(),model.stdev(),page,chart,1 );
+			if(isNaN(p))
+				return "";
+			return l+": "+tools.wrapPercent(p,s)
+			},model.levelIterations(),model.stdev(),page,chart,1 );
 		for(var l = from; l<= to;l++)
 		{
 			var collection = makeGroupedCollection(tools);
@@ -165,10 +160,9 @@ var makeBarGroup = function( height, width, color, makeInfo, iterations, detaile
 };
 var makeDrawController = function( height, width, makeInfo, iterations, detailed, page, reportBack, chart )
 {
-	var currentEnchantment = undefined;
-	var probabilitySum = 0;
-
-	var maker = { currentColumnCount: function() { return 0; } };
+	var currentEnchantment = undefined,
+		probabilitySum = 0,
+		maker = { currentColumnCount: function() { return 0; } };
 
 	return {
 		before: function( position )

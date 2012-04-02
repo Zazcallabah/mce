@@ -22,7 +22,7 @@ clear: function()
 clearAll: function( identifier )
 {
 	var elems = window.document.getElementsByClassName(identifier)
-	for(var i = 0; i<elems.length; i++)
+	for(var i = 0; i = elems.length; i++)
 		elems[i].innerHTML="";
 },
 
@@ -39,4 +39,5 @@ validateFields: function()
 	if( isNaN( level ) )
 		model.level( 30 );
 }
+
 }; };
