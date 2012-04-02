@@ -1,7 +1,7 @@
 var makeStorage = function() {
-	var dataLabel = "mce_data_932";
+	var dataLabel = "mce_data_932",
 
-	var mapModelToData = function(model)
+	mapModelToData = function(model)
 	{
 		return {
 			material: model.material(),
@@ -16,9 +16,9 @@ var makeStorage = function() {
 			enchantment: model.enchantment(),
 			power: model.power()
 		};
-	};
+	},
 
-	var mapDataToModel = function(model,data)
+	mapDataToModel = function(model,data)
 	{
 		model.material(data.material);
 		model.item(data.item);
@@ -55,8 +55,8 @@ saveData: function( model )
 {
 	if( typeof(localStorage) !== undefined )
 	{
-		var data = mapModelToData(model);
-		var jsonData = JSON.stringify( data );
+		var data = mapModelToData(model),
+			jsonData = JSON.stringify( data );
 		localStorage.setItem( dataLabel, jsonData )
 	}
 },
