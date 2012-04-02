@@ -1,8 +1,6 @@
 // Reduce scope travesal
 var Mathround = Math.round
 var Mathrandom = Math.random
-var Mathround = Math.round
-var Mathfloor = Math.floor
 /*
  j = 1 + random.nextInt((j >> 1) + 1) + random.nextInt((j >> 1) + 1);
  int k = j + i;
@@ -15,21 +13,21 @@ function simulateDistr( base, level )
 	var j = Mathround(base),
 	    f = ((Mathrandom()+Mathrandom()) - 1.0) / 4;
 	
-	return Mathfloor((1 + X(j) + X(j) + Mathround(level)) * (1.0 + f) + 0.5);
+	return Math.floor((1 + X(j) + X(j) + Mathround(level)) * (1.0 + f) + 0.5);
 }
 
 /**/
 function X( base )
 {
 	//var j = Math.floor( base/2) + 1;
-	//Eh?
-	return Mathfloor( Mathrandom() * ((base>>1) +1));
+	//^ Eh? \/ Bitwise-or with zero makes a floor
+	return 0 | ( Mathrandom() * ((base>>1) +1));
 }
 
 /**/
 function foreachValidEnchantment( materialId, itemId, callback )
 {
-	for( var i =0;i<_enchantments.length;i++)
+	for( var i = _enchantments.length; i; i--)
 	{
 		if( _enchantments[i].canEnchant( materialId, itemId ) )
 			for( var v= _enchantments[i].minlevel; v<=_enchantments[i].maxlevel; v++)
@@ -90,7 +88,7 @@ function simulateEnchantmentsInternal( itemId, matId, level, getModdedLevelCallb
 		write( "ERR" );
 
 	 //(var i = Math.floor(moddedLevel / 2); Math.floor(Math.random() * 50) <= i && enchantmentlist.length > 0; i = Math.floor(i / 2) )
-	for(/*var i = moddedLevel >> 1*/       ; Mathfloor( Mathrandom()  * 50) <= i && enchantmentlist.length > 0; i >>= 1) )
+	for(/*var i = moddedLevel >> 1*/       ;          ( Mathrandom()  * 50) <= i && enchantmentlist.length > 0; i >>= 1) )
 	{
 		enchantmentlist = stripeIncompatibleEnchantmentsCallback( enchantment, enchantmentlist );
 		if( enchantmentlist.length > 0 )
