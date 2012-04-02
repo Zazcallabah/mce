@@ -1,4 +1,8 @@
-
+// Reduce scope travesal
+var Mathround = Math.round
+var Mathrandom = Math.random
+var Mathround = Math.round
+var Mathfloor = Math.floor
 /*
  j = 1 + random.nextInt((j >> 1) + 1) + random.nextInt((j >> 1) + 1);
  int k = j + i;
@@ -8,27 +12,18 @@
 function simulateDistr( base, level )
 {
 
-	var j = Math.round(base);
-	var i = Math.round(level);
-
-	var j2 = 1 + X(j) + X(j);
-
-	var k = j2 + i;
-	var f = ((N() + N()) - 1.0) * 0.25;
-	return Math.floor(k * (1.0 + f) + 0.5);
+	var j = Mathround(base),
+	    f = ((Mathrandom()+Mathrandom()) - 1.0) / 4;
+	
+	return Mathfloor((1 + X(j) + X(j) + Mathround(level)) * (1.0 + f) + 0.5);
 }
 
 /**/
 function X( base )
 {
-	var j = Math.floor( base/2) + 1;
-	return Math.floor( Math.random() * (base/2 +1));
-}
-
-/**/
-function N()
-{
-	return Math.random();
+	//var j = Math.floor( base/2) + 1;
+	//Eh?
+	return Mathfloor( Mathrandom() * ((base>>1) +1));
 }
 
 /**/
@@ -45,14 +40,14 @@ function foreachValidEnchantment( materialId, itemId, callback )
 /**/
 function getEnchantments( matId, itemId, level )
 {
-	var map = {};
+	var map = {},
+		list = [];
 	foreachValidEnchantment( matId, itemId, function( ench, enchlevel ) 
 	{
 		if( ench.minEnchant(enchlevel) <= level && ench.maxEnchant(enchlevel) >= level )
 			map[ench.name] = { enchantment: ench, enchantmentLevel: enchlevel };
 	});
 
-	var list = [];
 	for( var name in map )
 	{
 		list[list.length] = map[name];
@@ -63,7 +58,7 @@ function getEnchantments( matId, itemId, level )
 function stripeIncompatibleEnchantments( enchantment, list )
 {
 	var arr = [];
-	for( var i =0;i<list.length;i++)
+	for( var i = list.length; i; i--)
 	{
 		if( list[i].enchantment.applies( enchantment.enchantment.name ) )
 			arr[arr.length] = list[i];
@@ -80,21 +75,22 @@ function simulateEnchantments( model, level )
 /* Callbacks used for testing. */
 function simulateEnchantmentsInternal( itemId, matId, level, getModdedLevelCallback,getEnchantmentsCallback,selectWeightedCallback,stripeIncompatibleEnchantmentsCallback)
 {
-	var applied_enchantments = [];
-
-	var baselevel = getBaseEnchantmentLevel( itemId, matId );
-	var moddedLevel = getModdedLevelCallback( baselevel, level );
-	var enchantmentlist = getEnchantmentsCallback( matId, itemId, moddedLevel );
+	var applied_enchantments = [],
+		baselevel = getBaseEnchantmentLevel( itemId, matId ),
+		moddedLevel = getModdedLevelCallback( baselevel, level ),
+		enchantmentlist = getEnchantmentsCallback( matId, itemId, moddedLevel );
 	if( enchantmentlist.length === 0 )
 		return applied_enchantments;
 
-	var enchantment = selectWeightedCallback( enchantmentlist);
+	var enchantment = selectWeightedCallback( enchantmentlist),
+		i = moddedLevel >> 1; //for loop
 	applied_enchantments[applied_enchantments.length] = enchantment;
 
 	if( enchantment === undefined )
 		write( "ERR" );
 
-	for(var i = Math.floor(moddedLevel / 2); Math.floor(Math.random() * 50) <= i && enchantmentlist.length > 0; i = Math.floor(i / 2) )
+	 //(var i = Math.floor(moddedLevel / 2); Math.floor(Math.random() * 50) <= i && enchantmentlist.length > 0; i = Math.floor(i / 2) )
+	for(/*var i = moddedLevel >> 1*/       ; Mathfloor( Mathrandom()  * 50) <= i && enchantmentlist.length > 0; i >>= 1) )
 	{
 		enchantmentlist = stripeIncompatibleEnchantmentsCallback( enchantment, enchantmentlist );
 		if( enchantmentlist.length > 0 )
@@ -113,7 +109,7 @@ function simulateEnchantmentsInternal( itemId, matId, level, getModdedLevelCallb
 function selectWeighted( validEnchantments )
 {
 	var totalweight = 0;
-	for( var i = 0; i<validEnchantments.length; i++)
+	for( var i = validEnchantments.length; i; i--)
 	{
 		if( validEnchantments[i].enchantment == undefined )
 		{
@@ -121,8 +117,8 @@ function selectWeighted( validEnchantments )
 		}
 		totalweight += validEnchantments[i].enchantment.weight;
 	}
-	var eeniemeenie = parseInt( Math.random() * totalweight );
-	for( i = 0; i<validEnchantments.length; i++)
+	var eeniemeenie = parseInt( Mathrandom() * totalweight );
+	for( i = validEnchantments.length; i; i--)
 	{
 		eeniemeenie -= validEnchantments[i].enchantment.weight;
 		if( eeniemeenie < 0 )
@@ -134,19 +130,16 @@ function selectWeighted( validEnchantments )
 }
 
 /**/
+var baseenchantlevels =[
+		[10, 9,25,15,-1,12,-1], // armor
+		[10,14,22,-1, 5,-1,15]]; // non-armor
+		
 function getBaseEnchantmentLevel( itemId, materialId )
 {
-	var type = 0; //armor
-
 	if( itemId < 4 )
-		type = 1; // non-armor
+		return baseenchantlevels[1][materialId]; // non-armor
 	if( itemId === 8 )
-		type = 2; //bow
-
-	var levels =[
-		[10, 9,25,15,-1,12,-1], // armor
-		[10,14,22,-1, 5,-1,15], // non-armor
-		[ 1, 1, 1, 1, 1, 1, 1]];// bow
-
-	return levels[type][materialId];
+		return 1; //bow
+	
+	return baseenchantlevels[0][materialId]; //armor
 }
