@@ -12,8 +12,9 @@ foreach: function( list, callback, order )
 		return keys;
 	}
 
-	var sortedproperties = keys(list).sort();
-	for( var i = 0; i<sortedproperties.length;i++ )
+	var sortedproperties = keys(list).sort()
+	sortedproperties.reverse(); //reverse traversal
+	for( var i = sortedproperties.length; i; i-- )
 	{
 		var propname = sortedproperties[i];
 
@@ -74,7 +75,7 @@ ensureStatsVars: function( vars, result )
 var makeIterator = function( action, callback, param ) { return {
 
 	run: function( times, model ){
-		for( var i = 0; i< times; i++ )
+		for( var i = times; i; i-- )
 		{
 			var result = action( model, param );
 			callback( result );
