@@ -1,8 +1,6 @@
 var makeSim = function(page,tools,model){
 
-
-
-	var simulate = function(gc,c,level)
+	var simulate = function(gc,c,level,mc)
 	{
 		var iterations = model.iterations();
 		var simulations = model.simulations();
@@ -34,7 +32,7 @@ var makeSim = function(page,tools,model){
 				c.updateSum();
 			gc.updateSum();
 		};
-		var it = makeIterator( simulateEnchantments, collectStats, level || model.level() );
+		var it = makeIterator( mc.simulateEnchantments, collectStats, level || model.level() );
 
 		var iterate = function()
 		{
@@ -45,7 +43,7 @@ var makeSim = function(page,tools,model){
 		return {total:total,misses:misses};
 	};
 
-	var byEnchantment = function()
+	var byEnchantment = function(mc)
 	{
 		var statsSimulateEnchantment = makeGroupedCollection( tools );
 		var statsEnchantmentCount = makeCollection( tools );
@@ -59,7 +57,7 @@ var makeSim = function(page,tools,model){
 			+ model.iterations() + " times over "
 			+ model.simulations() +" series." );
 
-		var sim_result = simulate(statsSimulateEnchantment,statsEnchantmentCount);
+		var sim_result = simulate(statsSimulateEnchantment,statsEnchantmentCount,undefined,mc);
 
 		page.write( "Done, presenting data..." );
 		if(sim_result.misses > 0 )
@@ -93,7 +91,7 @@ var makeSim = function(page,tools,model){
 		statsEnchantmentCount.foreach( nWriter.drawNext );
 	};
 
-	var byLevel = function(from,to){
+	var byLevel = function(from,to,mc){
 		var ench = _enchantments[model.enchantment()];
 		var chart = makeChart("Probability by level");
 		model.addChart(chart);
@@ -102,7 +100,7 @@ var makeSim = function(page,tools,model){
 		for(var l = from; l<= to;l++)
 		{
 			var collection = makeGroupedCollection(tools);
-			simulate(collection,undefined,l);
+			simulate(collection,undefined,l,mc);
 
 			var data = collection.find(model.enchantment(),model.power());
 			writer.drawNext(data,l);
@@ -110,10 +108,12 @@ var makeSim = function(page,tools,model){
 	};
 
 	return function(){
+		var mc =  makeMC(model.version());
+
 		page.clear();
 		page.validateFields();
 		_storage.saveData(model);
-		var baseLevel = getBaseEnchantmentLevel( model.item(), model.material() );
+		var baseLevel = mc.getBaseEnchantmentLevel( model.item(), model.material() );
 
 		page.write("");
 		page.write( "Base enchantment level for tool: " + baseLevel );
@@ -127,12 +127,12 @@ var makeSim = function(page,tools,model){
 
 		if( model.mode() === "level" )
 		{
-			byLevel(1,25);
-			byLevel(26,50);
+			byLevel(1,25,mc);
+			byLevel(26,50,mc);
 		}
 		else
 		{
-			byEnchantment();
+			byEnchantment(mc);
 		}
 	};
 };

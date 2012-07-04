@@ -1,5 +1,5 @@
 var makeStorage = function() {
-	var dataLabel = "mce_data_932";
+	var dataLabel = "mce_data_version_9000";
 
 	var mapModelToData = function(model)
 	{
@@ -14,7 +14,8 @@ var makeStorage = function() {
 			showstdev: model.stdev(),
 			mode: model.mode(),
 			enchantment: model.enchantment(),
-			power: model.power()
+			power: model.power(),
+			version: model.version()
 		};
 	};
 
@@ -31,6 +32,7 @@ var makeStorage = function() {
 		model.mode( data.mode );
 		model.enchantment( data.enchantment );
 		model.power( data.power );
+		model.version( data.version );
 	};
 
 	return {
@@ -47,7 +49,8 @@ setDefault: function( model )
 		showstdev: false,
 		mode: "enchantment",
 		enchantment:0,
-		power:1
+		power:1,
+		version:"1.2"
 	});
 },
 

@@ -41,7 +41,7 @@ body
 		<div class="container">
 			<a class="brand" href="#">Minecraft Enchantment Simulator</a>
 			<div class="nav-collapse">
-				<p class="navbar-text pull-right">v1.8.1</p>
+				<p class="navbar-text pull-right">v1.9</p>
 			</div>
 		</div>
 	</div>
@@ -53,6 +53,12 @@ body
 				<form class="well form-inline">
 					<fieldset>
 						<legend>Select input</legend>
+						<div class="control-group">
+							<label class="control-label">Minecraft Version</label>
+							<div class="controls">
+								<select class="span2" data-bind="options: availableVersions, optionsText: 'name',optionsValue:'value', value: version"></select>
+							</div>
+						</div>
 						<div class="control-group">
 							<label class="control-label">Material</label>
 							<div class="controls">

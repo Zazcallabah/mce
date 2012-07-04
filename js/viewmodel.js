@@ -22,6 +22,11 @@ var makeViewModel = function()
 		{name:'Leggings',value: 6},
 		{name:'Boots',value: 7},
 		{name:'Bow',value: 8}]);
+	model.availableVersions = ko.observableArray([
+		{name:'1.2', value: '1.2'},
+		{name:'1.3', value: '1.3'}
+		]);
+	model.version = ko.observable(null);
 	model.material = ko.observable(null);
 	model.item = ko.observable(null);
 	model.level = ko.observable(null);
@@ -83,6 +88,7 @@ var makeViewModel = function()
 		model.mode.subscribe(action);
 		model.power.subscribe(action);
 		model.enchantment.subscribe(action);
+		model.version.subscribe(action);
 	};
 	model.run = function(){};
 	model.reset = function(){};
