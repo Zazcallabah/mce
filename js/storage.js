@@ -50,7 +50,7 @@ setDefault: function( model )
 		mode: "enchantment",
 		enchantment:0,
 		power:1,
-		version:"1.2"
+		version:"1.3.1"
 	});
 },
 
