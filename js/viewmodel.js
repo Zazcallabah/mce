@@ -24,7 +24,7 @@ var makeViewModel = function()
 		{name:'Bow',value: 8}]);
 	model.availableVersions = ko.observableArray([
 		{name:'1.2', value: '1.2'},
-		{name:'1.3', value: '1.3'}
+		{name:'1.3.1', value: '1.3.1'}
 		]);
 	model.version = ko.observable(null);
 	model.material = ko.observable(null);

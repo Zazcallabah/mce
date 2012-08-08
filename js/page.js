@@ -34,8 +34,16 @@ validateFields: function()
 	var level = parseInt(model.level(),10);
 	if( level < 1 )
 		model.level(1);
-	if( level > 50 )
-		model.level(50);
+	if( model.version() === "1.3.1" )
+	{
+		if( level > 30 ) // new level cap in 1.3
+			model.level( 30 );
+	}
+	else
+	{
+		if( level > 50 )
+			model.level(50);
+	}
 	if( isNaN( level ) )
 		model.level( 30 );
 }

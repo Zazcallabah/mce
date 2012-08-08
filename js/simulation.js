@@ -127,8 +127,15 @@ var makeSim = function(page,tools,model){
 
 		if( model.mode() === "level" )
 		{
-			byLevel(1,25,mc);
-			byLevel(26,50,mc);
+			if( model.version() === "1.3.1" )
+			{
+				byLevel( 1,30,mc); // new level cap
+			}
+			else
+			{
+				byLevel(1,25,mc);
+				byLevel(26,50,mc);
+			}
 		}
 		else
 		{

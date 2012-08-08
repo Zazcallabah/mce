@@ -197,7 +197,7 @@ var makeMC = function(version)
 			getBaseEnchantmentLevel: getBaseEnchantmentLevel
 		};
 	}
-	else if( version === "1.3" )
+	else if( version === "1.3.1" )
 	{
 		var sim = function simulateEnchantments( model, level )
 		{
