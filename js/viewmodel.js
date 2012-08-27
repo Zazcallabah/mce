@@ -1,3 +1,8 @@
+/*
+  Constructor function for the view model object. See knockoutjs.com for details on knockout, viewmodels and the mvvm-pattern.
+  In short: We add properties to the viewmodel that can be read and updated by the html elements on the page.
+  When some properties are updated it triggers actions. The action is most commonly a new simulation run.
+*/
 var makeViewModel = function()
 {
 	var model = {};
@@ -95,7 +100,9 @@ var makeViewModel = function()
 	return model;
 };
 
-
+/*
+  Viewmodel object constructor function for one statistics-bar in a chart.
+*/
 var makeBar = function(color,message,label,upper,mean,lower,stdev,distanceleft,detailed,width)
 {
 	var bar = {};
@@ -113,7 +120,9 @@ var makeBar = function(color,message,label,upper,mean,lower,stdev,distanceleft,d
 	return bar;
 };
 
-
+/*
+  Viewmodel object constructor function for one chart. A chart holds a bunch of bars.
+*/
 var makeChart = function(title){
 	var chart={};
 	chart.bars = ko.observableArray([]);
