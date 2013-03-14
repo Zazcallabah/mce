@@ -2,9 +2,9 @@ Minecraft Enchantment Simulator
 ===============================
 
 ##Instructions
-* To use online, click on the download tab in the upper right corner of the github page and select 'Single download version'.
+* To use online, go to https://github.com/Zazcallabah/mce/downloads and select 'Single download version'.
 * To use offline, fork this repo (or download a tagged version) and open index.html.
-* It is recommended that you use Chrome / Chromium, as its javascript is much faster than other browsers.
+* I would recommended that you use Chrome / Chromium, because it is what I've used to test and develop this app.
  
 Choose material and item type from the menu at the left. The graphs will immediately update to represent the simulated probability of receiving different possible enchantments. Use the + and - buttons to select a chosen enchantment level and see how the probabilities change.
 
